@@ -6,35 +6,8 @@ from io import BytesIO
 import google.generativeai as genai
 # Configure Google Gemini API key
 genai.configure(api_key=st.secrets["google"]["api_key"])
+model = genai.GenerativeModel('gemini-pro')
 
-
-
-# Display available models
-st.title("Google Generative AI Demo")
-st.write("Available Models:")
-
-try:
-    # List available models
-    models = genai.list_models()
-    st.write(models)
-except Exception as e:
-    st.error(f"Error fetching models: {e}")
-
-# model = genai.GenerativeModel('gemini-pro')
-
-prompt = st.text_input("Enter a prompt for the AI model:")
-
-if prompt:
-    try:
-        # Use a specific model to generate text (replace with your model ID)
-        response = genai.generate_text(
-            model="gemini-pro",  # Replace with your model ID
-            prompt=prompt
-        )
-        st.write("Model Response:")
-        st.write(response['candidates'][0]['output'])  # Display the AI's response
-    except Exception as e:
-        st.error(f"Error generating text: {e}")
 
 
 # SQLite connection
