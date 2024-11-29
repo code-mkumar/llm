@@ -236,7 +236,10 @@ def create_combined_prompt(question, sql_prompt):
 def get_gemini_response(combined_prompt):
     response = model.generate_content(combined_prompt)
     print(response)
-    final = model.generate_content(f"{response.text} if any user_id word found in this statement replace with {st.session_state.id}")
+    try:
+        final = model.generate_content(f"{response.text} if any user_id word found in this statement replace with {st.session_state.id}")
+    except:
+        print(e)
     return final.text
     # if not response or 'candidates' not in response:
     #     return "The model could not generate a valid response. Please try again."
