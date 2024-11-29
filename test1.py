@@ -5,7 +5,7 @@ import qrcode
 from io import BytesIO
 import google.generativeai as genai
 # Configure Google Gemini API key
-genai.configure(api_key='AIzaSyAdY8kZFTZvmaDsFE6r4JF4gekpinMpju8')
+genai.configure(api_key=st.secrets["google"]["api_key"])
 model = genai.GenerativeModel('gemini-pro')
 # SQLite connection
 def create_connection():
