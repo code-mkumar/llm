@@ -296,8 +296,8 @@ def welcome_page():
 
             if isinstance(data, list):
                 #st.write("according to,")
-                # st.table(data)
-                pass
+                st.table(data)
+                
             else:
                 #st.write(data)
                 # Display any errors
