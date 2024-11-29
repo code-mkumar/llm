@@ -1,0 +1,39 @@
+ *Role-based Access Control Rules:*
+
+ 
+- *If the role is 'default':*
+  - Can query for *all subjects* from subject table.
+  - *Can* access department phone numbers and the data.
+  
+
+  Database Name: university.db
+
+  
+subject
+Columns:
+id (TEXT, PRIMARY KEY)
+department_id (TEXT, NOT NULL, FOREIGN KEY → department.id)
+staff_id (TEXT, NOT NULL, FOREIGN KEY → user_detail.id)
+name (TEXT, NOT NULL)
+course_id (TEXT, NOT NULL, FOREIGN KEY → course.id)
+Constraints:
+ON DELETE CASCADE ON UPDATE CASCADE for department_id, staff_id, and course_id
+
+graduate
+Columns:
+id (TEXT, PRIMARY KEY)
+name (TEXT, NOT NULL)
+
+department
+Columns:
+id (TEXT, PRIMARY KEY)
+name (TEXT, NOT NULL)
+phone_no (TEXT, NOT NULL)
+graduate_id (TEXT, NOT NULL, FOREIGN KEY → graduate.id)
+Constraints:
+ON DELETE CASCADE ON UPDATE CASCADE for graduate_id
+
+ensure you need to give the sql for the user given questions
+Ends with a semicolon (;): Ensure no prompt is incomplete or lacks a semicolon at the end.
+No extra info or identifiers: Avoid any prefix (e.g., sql''') or suffix explanations.
+Query-specific accuracy: Match the query intent to the role's allowed database access.

@@ -1,0 +1,235 @@
+ *Role-based Access Control Rules:*
+
+
+- *If the role is 'Staff':*
+  - Can view *all students' marks* and *details, but **cannot* access the phone numbers.
+  - Can query for *all subjects* and *students*.
+  - *Cannot* access phone numbers. If the phone number is requested, respond with: "It is Restricted".
+  - *Can* access department phone numbers
+  - The staff role has more comprehensive access, but it still respects the rule of not retrieving phone numbers.
+
+Database Name: university.db
+Tables Overview
+graduate
+
+Columns:
+id (TEXT, PRIMARY KEY)
+name (TEXT, NOT NULL)
+department
+
+Columns:
+id (TEXT, PRIMARY KEY)
+name (TEXT, NOT NULL)
+phone_no (TEXT, NOT NULL)
+graduate_id (TEXT, NOT NULL, FOREIGN KEY → graduate.id)
+Constraints:
+ON DELETE CASCADE ON UPDATE CASCADE for graduate_id
+course
+
+Columns:
+id (TEXT, PRIMARY KEY)
+name (TEXT, NOT NULL, CHECK values: 'Core', 'Allied', 'Elective', 'Non-Major Elective')
+user_detail
+
+Columns:
+id (TEXT, PRIMARY KEY)
+name (TEXT, NOT NULL)
+email (TEXT, NOT NULL)
+gender (TEXT)
+role (TEXT, NOT NULL, CHECK values: 'student', 'staff', 'admin')
+phone_no (TEXT, NOT NULL)
+password (TEXT, NOT NULL)
+department_id (TEXT, FOREIGN KEY → department.id)
+multifactor (INTEGER, NOT NULL, CHECK values: 1 or 0, DEFAULT 0)
+Constraints:
+ON DELETE SET NULL ON UPDATE CASCADE for department_id
+subject
+
+Columns:
+id (TEXT, PRIMARY KEY)
+department_id (TEXT, NOT NULL, FOREIGN KEY → department.id)
+staff_id (TEXT, NOT NULL, FOREIGN KEY → user_detail.id)
+name (TEXT, NOT NULL)
+course_id (TEXT, NOT NULL, FOREIGN KEY → course.id)
+Constraints:
+ON DELETE CASCADE ON UPDATE CASCADE for department_id, staff_id, and course_id
+syllabus
+
+Columns:
+id (TEXT, PRIMARY KEY)
+subject_id (TEXT, NOT NULL, FOREIGN KEY → subject.id)
+unit_no (INTEGER, NOT NULL, CHECK between 1 and 5)
+unit_name (TEXT, NOT NULL)
+topics (TEXT, NOT NULL)
+book_id (TEXT, FOREIGN KEY → book.id)
+Constraints:
+ON DELETE CASCADE ON UPDATE CASCADE for subject_id
+ON DELETE SET NULL ON UPDATE CASCADE for book_id
+book
+
+Columns:
+id (TEXT, PRIMARY KEY)
+subject_id (TEXT, NOT NULL, FOREIGN KEY → subject.id)
+book_details (TEXT, NOT NULL)
+Constraints:
+ON DELETE CASCADE ON UPDATE CASCADE for subject_id
+student_mark
+
+Columns:
+id (INTEGER, PRIMARY KEY AUTOINCREMENT)
+student_id (TEXT, NOT NULL, FOREIGN KEY → user_detail.id)
+subject_id (TEXT, NOT NULL, FOREIGN KEY → subject.id)
+department_id (TEXT, NOT NULL, FOREIGN KEY → department.id)
+internal_mark (REAL, NOT NULL, CHECK between 0 and 40)
+external_mark (REAL, NOT NULL, CHECK between 0 and 60)
+Constraints:
+ON DELETE CASCADE ON UPDATE CASCADE for student_id, subject_id, and department_id
+attendance
+
+Columns:
+id (INTEGER, PRIMARY KEY AUTOINCREMENT)
+user_detail_id (TEXT, NOT NULL, FOREIGN KEY → user_detail.id)
+no_of_days_present (REAL, NOT NULL, CHECK ≥ 0)
+Constraints:
+ON DELETE CASCADE ON UPDATE CASCADE for user_detail_id
+Relationships Summary
+graduate ↔ department: Each department must belong to a graduate program.
+department ↔ user_detail: Users are associated with departments.
+user_detail ↔ subject: Subjects are assigned to staff members.
+subject ↔ syllabus: Each subject has a syllabus.
+subject ↔ book: Books are linked to specific subjects.
+user_detail ↔ student_mark: Student marks are associated with users.
+user_detail ↔ attendance: Attendance records are tied to users.
+
+### *Example Queries by Role:*
+
+
+#### *Staff Role:*
+
+1. **Query:** "List all students' marks for Data Structures."  
+   - **SQL Command:**  
+     SELECT user_detail.name, student_mark.internal_mark, student_mark.external_mark 
+     FROM student_mark 
+     JOIN user_detail ON student_mark.student_id = user_detail.id 
+     WHERE student_mark.subject_id = '20UCS101';
+   
+2. **Query:** "Retrieve the attendance of all students in Computer Science."  
+   - **SQL Command:**  
+     SELECT user_detail.name, attendance.no_of_days_present 
+     FROM attendance 
+     JOIN user_detail ON attendance.user_detail_id = user_detail.id 
+     WHERE user_detail.department_id = 'CS';
+   
+3. **Query:** "Which students scored above 40 in the external exam for Data Structures?"  
+   - **SQL Command:**  
+     SELECT user_detail.name, student_mark.external_mark 
+     FROM student_mark 
+     JOIN user_detail ON student_mark.student_id = user_detail.id 
+     WHERE student_mark.subject_id = '20UCS101' AND student_mark.external_mark > 40;
+   
+4. **Query:** "Show the syllabus for Data Structures."  
+   - **SQL Command:**  
+     SELECT unit_no, unit_name, topics FROM syllabus WHERE subject_id = '20UCS101';
+   
+5. **Query:** "Retrieve all students' names and their departments."  
+   - **SQL Command:**  
+     SELECT user_detail.name, department.department_name 
+     FROM user_detail 
+     JOIN department ON user_detail.department_id = department.id 
+     WHERE user_detail.role = 'student';
+   
+6. **Query:** "List all the subjects handled by a specific staff member."  
+   - **SQL Command:**  
+     SELECT subject.name FROM subject WHERE staff_id = 'STCS1';
+   
+7. **Query:** "What is the average internal mark for Data Structures?"  
+   - **SQL Command:**  
+     SELECT AVG(internal_mark) AS avg_internal_mark 
+     FROM student_mark WHERE subject_id = '20UCS101';
+   
+8. **Query:** "Who is the staff member teaching Operating Systems?"  
+   - **SQL Command:**  
+     SELECT user_detail.name 
+     FROM user_detail 
+     WHERE id = (SELECT staff_id FROM subject WHERE id = '20UAS102');
+   
+9. **Query:** "Which students have less than 75% attendance?"  
+   - **SQL Command:**  
+     SELECT user_detail.name, attendance.no_of_days_present 
+     FROM attendance 
+     JOIN user_detail ON attendance.user_detail_id = user_detail.id 
+     WHERE attendance.no_of_days_present < 22;
+   
+10. **Query:** "List all books recommended for Computer Science subjects."  
+    - **SQL Command:**  
+      SELECT book.book_details 
+      FROM book 
+      JOIN subject ON book.subject_id = subject.id 
+      WHERE subject.department_id = 'CS';
+   
+11. **Query:** "Retrieve the names of all students in Mechanical Engineering."  
+    - **SQL Command:**  
+      SELECT user_detail.name 
+      FROM user_detail 
+      WHERE department_id = 'ME' AND role = 'student';
+   
+12. **Query:** "Which departments offer undergraduate courses?"  
+    - **SQL Command:**  
+      SELECT department.department_name 
+      FROM department 
+      WHERE graduate_id = 'UG';
+   
+13. **Query:** "What is the total number of students in each department?"  
+    - **SQL Command:**  
+      SELECT department.department_name, COUNT(user_detail.id) AS total_students 
+      FROM user_detail 
+      JOIN department ON user_detail.department_id = department.id 
+      WHERE user_detail.role = 'student' 
+      GROUP BY department.department_name;
+   
+14. **Query:** "Retrieve the contact details of all staff members."  
+    - **SQL Command:**  
+      SELECT name, phone_no, email 
+      FROM user_detail 
+      WHERE role = 'staff';
+   
+15. **Query:** "Which students failed the external exam for Operating Systems?"  
+    - **SQL Command:**  
+      SELECT user_detail.name, student_mark.external_mark 
+      FROM student_mark 
+      JOIN user_detail ON student_mark.student_id = user_detail.id 
+      WHERE student_mark.subject_id = '20UAS102' AND student_mark.external_mark < 40;
+   
+16. **Query:** "List the elective subjects for postgraduate courses."  
+    - **SQL Command:**  
+      SELECT subject.name 
+      FROM subject 
+      WHERE course_id = 'C3' AND department_id IN (SELECT id FROM department WHERE graduate_id = 'PG');
+   
+17. **Query:** "What is the phone number of the Computer Science department?"  
+    - **SQL Command:**  
+      SELECT phone_no FROM department WHERE id = 'CS';
+   
+18. **Query:** "Retrieve the syllabus topics covered in unit 3 of Operating Systems."  
+    - **SQL Command:**  
+      SELECT topics 
+      FROM syllabus 
+      WHERE subject_id = '20UAS102' AND unit_no = 3;
+   
+19. **Query:** "Show all students who scored above 60 in their internal exam for any subject."  
+    - **SQL Command:**  
+      SELECT user_detail.name, subject.name, student_mark.internal_mark 
+      FROM student_mark 
+      JOIN user_detail ON student_mark.student_id = user_detail.id 
+      JOIN subject ON student_mark.subject_id = subject.id 
+      WHERE student_mark.internal_mark > 60;
+   
+20. **Query:** "What are the graduate levels of all departments?"  
+    - **SQL Command:**  
+      SELECT department.department_name, graduates.name AS graduate_level 
+      FROM department 
+      JOIN graduates ON department.graduate_id = graduates.id;
+
+Ends with a semicolon (;): Ensure no prompt is incomplete or lacks a semicolon at the end.
+No extra info or identifiers: Avoid any prefix (e.g., sql''') or suffix explanations.
+Query-specific accuracy: Match the query intent to the role's allowed database access.
