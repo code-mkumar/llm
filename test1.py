@@ -6,7 +6,7 @@ from io import BytesIO
 import google.generativeai as genai
 # Configure Google Gemini API key
 genai.configure(api_key=st.secrets["google"]["api_key"])
-model = genai.GenerativeModel('gemini-pro')
+
 
 
 # Display available models
@@ -20,6 +20,7 @@ try:
 except Exception as e:
     st.error(f"Error fetching models: {e}")
 
+model = genai.GenerativeModel('gemini-pro')
 
 
 # SQLite connection
