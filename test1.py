@@ -295,11 +295,13 @@ def welcome_page():
             data = read_sql_query(single_line_query)
 
             if isinstance(data, list):
-                st.write("according to,")
+                #st.write("according to,")
                 # st.table(data)
+                pass
             else:
-                st.write(data)  # Display any errors
-
+                #st.write(data)
+                # Display any errors
+                pass
             # Generate response for the question and answer
             answer = model.generate_content(f"role:{role} prompt:{role_prompt} Answer this question: {question} with results {str(data)}")
             result_text = answer.candidates[0].content.parts[0].text
