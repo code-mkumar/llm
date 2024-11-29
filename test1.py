@@ -7,6 +7,21 @@ import google.generativeai as genai
 # Configure Google Gemini API key
 genai.configure(api_key=st.secrets["google"]["api_key"])
 model = genai.GenerativeModel('gemini-pro')
+
+
+# Display available models
+st.title("Google Generative AI Demo")
+st.write("Available Models:")
+
+try:
+    # List available models
+    models = genai.list_models()
+    st.write(models)
+except Exception as e:
+    st.error(f"Error fetching models: {e}")
+
+
+
 # SQLite connection
 def create_connection():
     return sqlite3.connect("university.db")
