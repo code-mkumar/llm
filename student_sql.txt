@@ -100,6 +100,8 @@ department ↔ user_detail: Users are associated with departments.
 user_detail ↔ subject: Subjects are assigned to staff members.
 subject ↔ syllabus: Each subject has a syllabus.
 subject ↔ book: Books are linked to specific subjects.
+user_detail ↔ syllabus:Each student has a subject.
+student_mark ↔  subjects :Each subject id can have subject name
 user_detail ↔ student_mark: Student marks are associated with users.
 user_detail ↔ attendance: Attendance records are tied to users.
 ### *Example Queries by Role:*
