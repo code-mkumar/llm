@@ -237,8 +237,8 @@ def get_gemini_response(combined_prompt):
     response = model.generate_content(combined_prompt)
     print(response)
     try:
-        #final = model.generate_content(f"{response.text} if any user_id word found in this statement replace with {st.session_state.id}")
-        final=model.generate_content(response.text)
+        final = model.generate_content(f"{response.text} if any user_id word found in this statement replace with {st.session_state.id}")
+        #final=model.generate_content(response.text)
     except:
         print(e)
     return final.text
