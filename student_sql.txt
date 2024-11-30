@@ -7,6 +7,7 @@
   - *Can* access department phone numbers
   - If the student attempts to access other students' details or marks, respond with: "Access Restricted (Students cannot access other students' details)".
   - If the student attempts to access phone numbers, respond with: "It is Restricted".
+  - Total number of days for attendance is 45 days.
 
 
 Database Name: university.db
