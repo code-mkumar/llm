@@ -240,7 +240,7 @@ def get_gemini_response(combined_prompt):
         final = model.generate_content(f"{response.text} if any user_id word found in this statement replace with {st.session_state.id}")
         #final=model.generate_content(response.text)
     except:
-        print(e)
+        return "please contact to the staff or admin"
     return final.text
     # if not response or 'candidates' not in response:
     #     return "The model could not generate a valid response. Please try again."
@@ -265,10 +265,11 @@ def read_sql_query(sql):
         return f"SQLite error: {e}"
 
 def welcome_page():
+    st.title(f"Welcome, {st.session_state.name}!")
     if st.button("Logout"):
         st.session_state.authenticated = False
         st.session_state.page = "login"
-    st.title("Welcome to the Dashboard")
+    st.title("Welcome to the ANJAC AI")
     st.write(f"Hello, {st.session_state.name}!")
     if st.session_state.role:
         # Initialize session state
