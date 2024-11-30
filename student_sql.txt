@@ -1,5 +1,5 @@
  *Role-based Access Control Rules:*
-
+  - give all the detials with the student *name* from the *user_detial* using *user_id*.
   - while access the book table don't require the *user_id*.
   - Can *only* access their own marks and details (based on their *user_id*).
   - *Cannot* access any other student’s details or marks.
