@@ -365,7 +365,7 @@ VALUES (?, ?, ?, ?, ?, ?)
 
 students = [
     ('SCS1', 'Alice Smith', 'CS', 'alice.smith@example.com', 'male','9876543210', 'password', 'CS'),
-    ('SCS2', 'Mala', 'CS', 'bob.johnson@example.com', 'female','9876543211', 'password', 'CS'),
+    ('SCS2', 'Abirami', 'CS', 'abirami.c@anjaconline.org', 'female','9876543211', 'password', 'CS'),
     ('SCS3', 'Charlie Davis', 'CS', 'charlie.davis@example.com','male', '9876543212', 'password', 'CS'),
     ('SCS4', 'Dhivya', 'CS', 'diana.moore@example.com', 'female','9876543213', 'password', 'CS'),
     ('SCS5', 'Ethan Taylor', 'CS', 'ethan.taylor@example.com', 'male','9876543214', 'password', 'CS'),
