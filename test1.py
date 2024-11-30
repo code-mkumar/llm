@@ -251,7 +251,7 @@ def get_gemini_response(combined_prompt):
 # Function to query the SQL database
 def read_sql_query(sql):
     try:
-        print(sql)
+        #print(sql)
         conn = create_connection()
         cur = conn.cursor()
         cur.execute(sql)
@@ -300,7 +300,8 @@ def welcome_page():
 
             if isinstance(data, list):
                 #st.write("according to,")
-                st.table(data)
+                #st.table(data)
+                pass
                 
             else:
                 #st.write(data)
