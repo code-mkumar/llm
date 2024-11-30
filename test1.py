@@ -260,7 +260,7 @@ def read_sql_query(sql):
         conn.close()
         return rows
     except Exception as e:
-        print(sql)
+        #print(sql)
         print(e)
         return f"SQLite error: {e}"
 
