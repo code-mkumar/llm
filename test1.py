@@ -265,7 +265,6 @@ def read_sql_query(sql):
         return f"SQLite error: {e}"
 
 def welcome_page():
-    st.title(f"Welcome, {st.session_state.name}!")
     if st.button("Logout"):
         st.session_state.authenticated = False
         st.session_state.page = "login"
