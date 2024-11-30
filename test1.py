@@ -308,7 +308,7 @@ def welcome_page():
                 # Display any errors
                 pass
             # Generate response for the question and answer
-            answer = model.generate_content(f"role:{role} prompt:{role_prompt} Answer this question: {question} with results {str(data)}")
+            answer = model.generate_content(f"student name :{st.session_state.name} role:{role} prompt:{role_prompt} Answer this question: {question} with results {str(data)}")
             result_text = answer.candidates[0].content.parts[0].text
 
             # Store the question and answer in session state
