@@ -86,6 +86,8 @@ CREATE TABLE IF NOT EXISTS book (
     subject_id TEXT NOT NULL,
     book_details TEXT NOT NULL,
     FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES user_detail(id) ON DELETE CASCADE ON UPDATE CASCADE,
+
 );
 ''')
 
