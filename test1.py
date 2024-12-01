@@ -289,7 +289,7 @@ def welcome_page():
             response = get_gemini_response(combined_prompt)
 
             # Display the SQL query
-            #st.write("Generated SQL Query:", response)
+            st.write("Generated SQL Query:", response)
             raw_query = response
             formatted_query = raw_query.replace("sql", "").strip("'''").strip()
             # print("formatted :",formatted_query)
