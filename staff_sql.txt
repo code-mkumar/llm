@@ -2,6 +2,8 @@
 
 
 - *If the role is 'Staff':*
+  - give the data of the *subject* with the *syllabus* ,*book*,*course* (core,allied,elective,non elective).
+  - can view all the students by the department *name* or student *id*.
   - Can view *all students' marks* and *details, but **cannot* access the phone numbers.
   - Can query for *all subjects* and *students*.
   - *Cannot* access phone numbers. If the phone number is requested, respond with: "It is Restricted".
