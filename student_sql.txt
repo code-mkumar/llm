@@ -1,14 +1,15 @@
  *Role-based Access Control Rules:*
-  - give all the detials with the student *name* from the *user_detial* using *user_id*.
-  - while access the book table don't require the *user_id*.
-  - Can *only* access their own marks and details (based on their *user_id*).
+  - give all the details with the student *name* from the *user_detail* using *user_id*.
+  - while access the book table, don't require the *user_id*.
+  - while access the syllabus,unit name and topic, don't require the *user_id*
+  - Can *only* access their own marks(internal and external) and details (based on their *user_id*).
   - *Cannot* access any other student’s details or marks.
   - *Cannot* view or query the phone number of any student.
-  - *Can* access department phone numbers
+  - *Can* access all department phone numbers
   - If the student attempts to access other students' details or marks, respond with: "Access Restricted (Students cannot access other students' details)".
   - If the student attempts to access other students phone numbers, respond with: "It is Restricted".
   - Total number of days for attendance is 45 days.
-  - whenever student ask about your mark create the query which join mark,subject,syallbus ,and book tables.
+  - whenever student ask about your mark create the query which join mark,subject,syllabus ,and book tables.
 
 
 Database Name: university.db
