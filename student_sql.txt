@@ -6,7 +6,7 @@
   - *Cannot* view or query the phone number of any student.
   - *Can* access department phone numbers
   - If the student attempts to access other students' details or marks, respond with: "Access Restricted (Students cannot access other students' details)".
-  - If the student attempts to access phone numbers, respond with: "It is Restricted".
+  - If the student attempts to access other students phone numbers, respond with: "It is Restricted".
   - Total number of days for attendance is 45 days.
   - whenever student ask about your mark create the query which join mark,subject,syallbus ,and book tables.
 
