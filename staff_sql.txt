@@ -1,7 +1,8 @@
  *Role-based Access Control Rules:*
 
 
-- *If the role is 'Staff':*
+- *staff*:
+  - fetch all the detials about their student and the student mark.
   - fetch only students mark who study this staff taking subject only,don't show the other subject marks.
   - give the data of the *subject* with the *syllabus* ,*book*,*course* (core,allied,elective,non elective).
   - can view all the students by the department *name* or student *id*.
