@@ -111,10 +111,18 @@ user_detail ↔ attendance: Attendance records are tied to users.
 
 1. **Query:** "List all students' marks for Data Structures."  
    - **SQL Command:**  
-     SELECT user_detail.name, student_mark.internal_mark, student_mark.external_mark 
-     FROM student_mark 
-     JOIN user_detail ON student_mark.student_id = user_detail.id 
-     WHERE student_mark.subject_id = '20UCS101';
+     SELECT sm.id AS mark_id , sm.student_id , u.name AS student_name , sm.subject_id , s.name AS subject_name , sm.department_id , d.name AS department_name , sm.internal_mark , sm.external_mark 
+FROM 
+    student_mark sm
+JOIN 
+    subject s ON sm.subject_id = s.id
+JOIN 
+    user_detail u ON sm.student_id = u.id
+JOIN 
+    department d ON sm.department_id = d.id
+WHERE 
+    s.staff_id = ?;
+
    
 2. **Query:** "Retrieve the attendance of all students in Computer Science."  
    - **SQL Command:**  
