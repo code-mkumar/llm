@@ -188,14 +188,76 @@ user_detail ↔ attendance: Attendance records are tied to users.
       JOIN student_mark ON attendance.user_detail_id = student_mark.student_id 
       WHERE student_mark.subject_id = '22CS101' AND student_mark.student_id = 'user_id';
 
-19. **Query:** "List all available courses."
-    - **Response:** 
-      "Access Restricted (Students cannot access global course details)."
+19. **Query:** "Give me the book details under the subject ID `20PAM102`."  
+   - **SQL Command:** SELECT book_details FROM book WHERE subject_id = '20PAM102';
 
-20. **Query:** "What department is the subject 'Mathematics' under?"
-    - **SQL Command:** 
-      SELECT name FROM department WHERE id = (SELECT department_id FROM subject WHERE name = 'Mathematics');
+20. **Query:** "Give me the book ID for the book name 'Thermodynamics by Yunus Çengel, 8th Edition'."  
+   - **SQL Command:** SELECT id FROM book WHERE book_details = 'Thermodynamics by Yunus Çengel, 8th Edition';
 
+21. **Query:** "Is the Civil Engineering department under UG or PG?"  
+   - **SQL Command:** SELECT name FROM graduate WHERE id = (SELECT graduate_id FROM department WHERE name = 'Civil Engineering');
+
+22. **Query:** "Tell me about my department."  
+   - **SQL Command:** SELECT department.name, department.phone_no FROM department WHERE id = (SELECT department_id FROM user_detail WHERE id = 'user_id');
+
+23. **Query:** "Give me the phone number for the department 'Computer Science'."  
+   - **SQL Command:** SELECT phone_no FROM department WHERE name = 'Computer Science';
+
+24. **Query:** "What are my internal and external marks, along with the syllabus and book details for my enrolled subjects?"  
+   - **SQL Command:** SELECT student_mark.internal_mark, student_mark.external_mark, syllabus.unit_name, syllabus.topics, book.book_details 
+                       FROM student_mark
+                       JOIN syllabus ON student_mark.subject_id = syllabus.subject_id
+                       JOIN book ON syllabus.book_id = book.id
+                       WHERE student_mark.student_id = 'user_id';
+
+25. **Query:** "What are my marks and attendance for all enrolled subjects?"  
+   - **SQL Command:** SELECT subject.name AS subject_name, student_mark.internal_mark, student_mark.external_mark, attendance.no_of_days_present 
+                       FROM student_mark 
+                       JOIN attendance ON student_mark.student_id = attendance.user_detail_id
+                       JOIN subject ON student_mark.subject_id = subject.id
+                       WHERE student_mark.student_id = 'user_id';
+
+26. **Query:** "List all departments with their phone numbers under the graduate program 'UG'."  
+   - **SQL Command:** SELECT department.name, department.phone_no FROM department WHERE graduate_id = (SELECT id FROM graduate WHERE name = 'UG');
+
+27. **Query:** "What are the topics and units covered in the subject `22CS101`, and what are the books related to it?"  
+   - **SQL Command:** SELECT syllabus.unit_no, syllabus.unit_name, syllabus.topics, book.book_details 
+                       FROM syllabus 
+                       LEFT JOIN book ON syllabus.book_id = book.id
+                       WHERE syllabus.subject_id = '22CS101';
+
+28. **Query:** "What is the department name and phone number for my enrolled subjects?"  
+    - **SQL Command:** SELECT department.name, department.phone_no 
+                        FROM department 
+                        WHERE id = (SELECT department_id FROM subject WHERE id IN 
+                            (SELECT subject_id FROM student_mark WHERE student_id = 'user_id'));
+
+29. **Query:** "Who is the staff teaching my subject '22CS101'?"  
+    - **SQL Command:** SELECT name FROM user_detail WHERE id = (SELECT staff_id FROM subject WHERE id = '22CS101');
+
+30. **Query:** "Which books are suggested for my subjects?"  
+    - **SQL Command:** SELECT DISTINCT book.book_details 
+                        FROM book 
+                        JOIN syllabus ON book.id = syllabus.book_id
+                        WHERE syllabus.subject_id IN (SELECT subject_id FROM student_mark WHERE student_id = 'user_id');
+
+31. **Query:** "What subjects are offered in my department?"  
+    - **SQL Command:** SELECT name FROM subject WHERE department_id = (SELECT department_id FROM user_detail WHERE id = 'user_id');
+
+32. **Query:** "Show me all graduate programs."  
+    - **SQL Command:** SELECT name FROM graduate;
+
+33. **Query:** "Show me the list of all available books."  
+    - **SQL Command:** SELECT id, book_details FROM book;
+
+34. **Query:** "What are the top 5 students in my department based on total marks?"  
+    - **SQL Command:** SELECT user_detail.name, SUM(student_mark.internal_mark + student_mark.external_mark) AS total_marks 
+                        FROM student_mark 
+                        JOIN user_detail ON student_mark.student_id = user_detail.id
+                        WHERE user_detail.department_id = (SELECT department_id FROM user_detail WHERE id = 'user_id')
+                        GROUP BY user_detail.name 
+                        ORDER BY total_marks DESC
+                        LIMIT 5;
 
 Ends with a semicolon (;): Ensure no prompt is incomplete or lacks a semicolon at the end.
 No extra info or identifiers: Avoid any prefix (e.g., sql''') or suffix explanations.
