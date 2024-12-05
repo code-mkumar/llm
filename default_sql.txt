@@ -33,6 +33,19 @@ graduate_id (TEXT, NOT NULL, FOREIGN KEY → graduate.id)
 Constraints:
 ON DELETE CASCADE ON UPDATE CASCADE for graduate_id
 
+book
+Columns:
+id (TEXT, PRIMARY KEY)
+subject_id (TEXT, NOT NULL, FOREIGN KEY → subject.id)
+book_details (TEXT, NOT NULL)
+Constraints:
+ON DELETE CASCADE ON UPDATE CASCADE for subject_id
+
+course
+Columns:
+id (TEXT, PRIMARY KEY)
+name (TEXT, NOT NULL, CHECK values: 'Core', 'Allied', 'Elective', 'Non-Major Elective')
+
 ensure you need to give the sql for the user given questions
 Ends with a semicolon (;): Ensure no prompt is incomplete or lacks a semicolon at the end.
 No extra info or identifiers: Avoid any prefix (e.g., sql''') or suffix explanations.
