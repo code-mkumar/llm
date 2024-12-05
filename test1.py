@@ -101,14 +101,18 @@ def guest_page():
     submit = st.button('Ask the question')
     default,default_sql = read_default_files()
     if submit:
-        response=model.generate_content(f"{default_sql}\n\n{question}")
-        raw_query = response.text
-        formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-            # print("formatted :",formatted_query)
-        single_line_query = " ".join(formatted_query.split()).replace("```", "")
+        txt=model.generate_content(f"{question} give 1 if the question need sql query or 0")
+        #st.write(txt.text)
+        data = ''
+        if not txt.text == '0':
+            response=model.generate_content(f"{default_sql}\n\n{question}")
+            raw_query = response.text
+            formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+            print("formatted :",formatted_query)
+            single_line_query = " ".join(formatted_query.split()).replace("```", "")
             # print(single_line_query)
             # Query the database
-        data = read_sql_query(single_line_query)
+            data = read_sql_query(single_line_query)
         answer = model.generate_content(f"{default} Answer this question: {question} with results {str(data)}")
         result_text = answer.candidates[0].content.parts[0].text
 
