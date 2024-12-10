@@ -14,6 +14,7 @@ model = genai.GenerativeModel('gemini-pro')
 def create_connection():
     return sqlite3.connect("university.db")
 
+
 # Generate a new TOTP secret for a user
 def generate_secret_code(user_id):
     conn = create_connection()
@@ -108,7 +109,7 @@ def guest_page():
     # Main page content
     st.title("Welcome, Guest!")
     st.subheader("You can explore the site as a guest, but you'll need to log in for full role-based access.")
-    st.write("Hi! I'm ANJAC AI by Ayya Nadar Janaki Ammal College. How can I assist you?")
+    st.write("Hikkkkkkkkkk! I'm ANJAC AI by Ayya Nadar Janaki Ammal College. How can I assist you?")
 
     # Input field for the user's question (submit on Enter key)
     question = st.text_input('Input your question:', key='input', placeholder="Type your question and press Enter")
