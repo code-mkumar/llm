@@ -98,8 +98,8 @@ def guest_page():
     # Sidebar to display previous questions and answers
     with st.sidebar:
         if st.button("Go to Login"):
-            #st.session_state.page = "login"  # Single-click to redirect to login page
-            login_page()
+            st.session_state.page = "login"  # Single-click to redirect to login page
+            # login_page()
         st.title("Chat History")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):  # Most recent first
