@@ -159,6 +159,8 @@ def guest_page():
 
 #login page
 def login_page():
+    pg = st.navigation([st.Page(login_page)])
+    pg.run() 
     st.title("Login")
     user_id = st.text_input("User ID")
     password = st.text_input("Password", type="password")
@@ -349,7 +351,7 @@ def welcome_page():
                     st.write("---")
 
 
-pg = st.navigation([st.Page(login_page), st.Page(guest_page)])
+pg = st.navigation([st.Page(login_page)])
 pg.run()    
 
 # Main app
