@@ -185,8 +185,8 @@ def login_page():
                     st.session_state.page = "otp_verification"  # Otherwise show OTP verification
         else:
             st.error("Invalid credentials.")
-    if st.button("Visit as Guest"):
-        st.session_state.page = "guest"
+    # if st.button("Visit as Guest"):
+    #     st.session_state.page = "guest"
 
 #qr scanning page
 def qr_setup_page():
