@@ -375,7 +375,7 @@ def app():
      
     # Page navigation
     if st.session_state.page == "guest":
-        guest_page()
+        # guest_page()
     elif st.session_state.page == "login":
         login_page()
     elif st.session_state.page == "qr_setup":
