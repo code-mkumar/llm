@@ -100,9 +100,9 @@ def guest_page():
     # Sidebar to display previous questions and answers
     with st.sidebar:
         
-        # if st.button("Go to Login"):
+        if st.button("Go to Login"):
             
-            # st.session_state.page = "login"  # Single-click to redirect to login page
+            st.session_state.page = "login"  # Single-click to redirect to login page
             # login_page()
         st.title("Chat History")
         if st.session_state.qa_list:
@@ -186,8 +186,8 @@ def login_page():
                     st.session_state.page = "otp_verification"  # Otherwise show OTP verification
         else:
             st.error("Invalid credentials.")
-    # if st.button("Visit as Guest"):
-    #     st.session_state.page = "guest"
+    if st.button("Visit as Guest"):
+        st.session_state.page = "guest"
 
 #qr scanning page
 def qr_setup_page():
@@ -350,8 +350,8 @@ def welcome_page():
                     st.write("---")
 
 
-pg = st.navigation([st.Page(login_page, title="LOGIN"),st.Page(guest_page, title="GUEST") ])
-pg.run()    
+# pg = st.navigation([st.Page(login_page, title="LOGIN"),st.Page(guest_page, title="GUEST") ])
+# pg.run()    
 
 # Main app
 def app():
