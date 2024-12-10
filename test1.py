@@ -351,8 +351,8 @@ def welcome_page():
                     st.write("---")
 
 
-pg = st.navigation([st.Page(login_page)])
-pg.run()    
+# pg = st.navigation([st.Page(login_page)])
+# pg.run()    
 
 # Main app
 def app():
