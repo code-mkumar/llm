@@ -95,10 +95,11 @@ def guest_page():
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
 
+    
+
     # Sidebar to display previous questions and answers
     with st.sidebar:
-        pg = st.navigation([st.Page(login_page), st.Page(guest_page)])
-        pg.run()
+        
         # if st.button("Go to Login"):
             
             # st.session_state.page = "login"  # Single-click to redirect to login page
@@ -348,7 +349,8 @@ def welcome_page():
                     st.write("---")
 
 
-    
+pg = st.navigation([st.Page(login_page), st.Page(guest_page)])
+pg.run()    
 
 # Main app
 def app():
