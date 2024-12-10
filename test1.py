@@ -97,8 +97,11 @@ def guest_page():
 
     # Sidebar to display previous questions and answers
     with st.sidebar:
-        if st.button("Go to Login"):
-            st.session_state.page = "login"  # Single-click to redirect to login page
+        pg = st.navigation([st.Page(login_page), st.Page(guest_page)])
+        pg.run()
+        # if st.button("Go to Login"):
+            
+            # st.session_state.page = "login"  # Single-click to redirect to login page
             # login_page()
         st.title("Chat History")
         if st.session_state.qa_list:
