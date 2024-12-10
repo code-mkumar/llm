@@ -97,6 +97,9 @@ def guest_page():
 
     # Sidebar to display previous questions and answers
     with st.sidebar:
+        if st.button("Go to Login"):
+            #st.session_state.page = "login"  # Single-click to redirect to login page
+            login_page()
         st.title("Chat History")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):  # Most recent first
@@ -109,15 +112,15 @@ def guest_page():
     # Main page content
     st.title("Welcome, Guest!")
     st.subheader("You can explore the site as a guest, but you'll need to log in for full role-based access.")
-    st.write("Hikkkkkkkkkk! I'm ANJAC AI by Ayya Nadar Janaki Ammal College. How can I assist you?")
+    st.write("Hi! I'm ANJAC AI by Ayya Nadar Janaki Ammal College. How can I assist you?")
 
     # Input field for the user's question (submit on Enter key)
     question = st.text_input('Input your question:', key='input', placeholder="Type your question and press Enter")
     default, default_sql = read_default_files()
 
     # Modify the login button to redirect on click
-    if st.button("Go to Login"):
-        st.session_state.page = "login"  # Single-click to redirect to login page
+    # if st.button("Go to Login"):
+    #     st.session_state.page = "login"  # Single-click to redirect to login page
 
     if question.strip():  # Process only if the question is non-empty
         try:
