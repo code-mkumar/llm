@@ -129,12 +129,46 @@ def guest_page():
 
 
 #login page
+# def login_page():
+#     st.title("Login")
+#     user_id = st.text_input("User ID")
+#     password = st.text_input("Password", type="password")
+
+#     if st.button("Login"):
+#         conn = create_connection()
+#         cursor = conn.cursor()
+#         cursor.execute("SELECT * FROM user_detail WHERE id = ? AND password = ?", (user_id, password))
+#         user = cursor.fetchone()
+#         conn.close()
+
+#         if user:
+#             st.session_state.authenticated = True
+#             st.session_state.user_id = user_id
+#             st.session_state.multifactor = user[7]  # Multifactor column
+#             st.session_state.secret = user[9]  # Secret code column
+#             st.success("Login successful!")
+#             if st.session_state.multifactor == 1:
+#                 st.session_state.page = "otp_verification"  # Direct to OTP verification if MFA is enabled
+#             else:
+#                 if st.session_state.secret == "None":
+#                     st.session_state.page = "qr_setup"  # If MFA is not enabled, show QR setup
+#                 else:
+#                     st.session_state.page = "otp_verification"  # Otherwise show OTP verification
+#         else:
+#             st.error("Invalid credentials.")
+#     if st.button("Visit as Guest"):
+#         st.session_state.page = "guest"
+
+import streamlit as st
+
 def login_page():
     st.title("Login")
-    user_id = st.text_input("User ID")
-    password = st.text_input("Password", type="password")
 
-    if st.button("Login"):
+    # Input fields with on_change callback
+    def authenticate():
+        user_id = st.session_state.user_id
+        password = st.session_state.password
+
         conn = create_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM user_detail WHERE id = ? AND password = ?", (user_id, password))
@@ -156,8 +190,13 @@ def login_page():
                     st.session_state.page = "otp_verification"  # Otherwise show OTP verification
         else:
             st.error("Invalid credentials.")
+
+    st.text_input("User ID", key="user_id", on_change=authenticate)
+    st.text_input("Password", type="password", key="password", on_change=authenticate)
+
     if st.button("Visit as Guest"):
         st.session_state.page = "guest"
+
 
 #qr scanning page
 def qr_setup_page():
