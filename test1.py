@@ -104,60 +104,116 @@ def write_content(data):
         file.write(f'{current_datetime} - {data}\n')
 
 # Pages
+# def guest_page():
+#     # Initialize session state
+#     if 'qa_list' not in st.session_state:
+#         st.session_state.qa_list = []
+    
+#     with st.sidebar:
+#         if st.button("Go to Login"):
+#             st.session_state.page = "login"
+#             # app()
+#         st.header("Chat history")
+#         if st.session_state.qa_list:
+#             for qa in reversed(st.session_state.qa_list):
+#         # Display previous questions and answers
+#                 st.markdown(f"**Question:** {qa['question']}")
+#                 st.markdown(f"**Answer:** {qa['answer']}")
+#                 st.markdown("---")
+#         else:
+#             st.info("No previous charts yet!")
+        
+#     st.title("Welcome, Guest!")
+#     st.write("You can explore the site as a guest, but you'll need to log in for full role based access.")
+#     question = st.text_input('Input your question:', key='input')
+#     # submit = st.button('Ask the question')
+#     default,default_sql = read_default_files()
+#     if question.strip():
+#         txt=model.generate_content(f"{question} give 1 if the question need sql query or 0")
+#         #st.write(txt.text)
+#         data = ''
+#         if not txt.text == '0':
+#             try:
+#                 response=model.generate_content(f"{default_sql}\n\n{question}")
+#                 raw_query = response.text
+#                 formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+#                 # print("formatted :",formatted_query)
+#                 single_line_query = " ".join(formatted_query.split()).replace("```", "")
+#             # print(single_line_query)
+#             # Query the database
+#                 data = read_sql_query(single_line_query)
+#              except Exception as e:
+#                 st.error(f"An error occured: {e}")
+
+#                 # st.write(data)
+#             answer = model.generate_content(f"{default} Answer this question: {question} with results {str(data)}")
+#             result_text = answer.candidates[0].content.parts[0].text
+
+#             # Store the question and answer in session state
+#             st.session_state.qa_list.append({'question': question, 'answer': result_text})
+#             write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
+                
+#             st.markdown(f"**Question:** {question}")
+#             st.markdown(f"**Answer:** {result_text}")
+#             st.markdown("---")
+           
+       
 def guest_page():
-    # Initialize session state
+    # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
-    
+
+    # Sidebar to display previous questions and answers
     with st.sidebar:
-        if st.button("Go to Login"):
-            st.session_state.page = "login"
-            # app()
-        st.header("Chat history")
+        st.title("Chat History")
         if st.session_state.qa_list:
-            for qa in reversed(st.session_state.qa_list):
-        # Display previous questions and answers
+            for qa in reversed(st.session_state.qa_list):  # Most recent first
                 st.markdown(f"**Question:** {qa['question']}")
                 st.markdown(f"**Answer:** {qa['answer']}")
                 st.markdown("---")
         else:
-            st.info("No previous charts yet!")
-        
-    st.title("Welcome, Guest!")
-    st.write("You can explore the site as a guest, but you'll need to log in for full role based access.")
-    question = st.text_input('Input your question:', key='input')
-    # submit = st.button('Ask the question')
-    default,default_sql = read_default_files()
-    if question.strip():
-        txt=model.generate_content(f"{question} give 1 if the question need sql query or 0")
-        #st.write(txt.text)
-        data = ''
-        if not txt.text == '0':
-            try:
-                response=model.generate_content(f"{default_sql}\n\n{question}")
-                raw_query = response.text
-                formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-                # print("formatted :",formatted_query)
-                single_line_query = " ".join(formatted_query.split()).replace("```", "")
-            # print(single_line_query)
-            # Query the database
-                data = read_sql_query(single_line_query)
-             except Exception as e:
-                st.error(f"An error occured: {e}")
+            st.info("No previous chats yet.")
 
-                # st.write(data)
-            answer = model.generate_content(f"{default} Answer this question: {question} with results {str(data)}")
+# Main page content
+    if st.button("Go to Login"):
+        st.session_state.page = "login"
+
+    st.title("Welcome, Guest!")
+    st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
+
+    # Input field for the user's question (submit on Enter key)
+    question = st.text_input('Input your question:', key='input', placeholder="Type your question and press Enter")
+    default, default_sql = read_default_files()
+
+    if question.strip():  # Process only if the question is non-empty
+        try:
+            # Generate SQL query using the model
+            response = model.generate_content(f"{default_sql}\n\n{question}")
+            raw_query = response.text
+
+            # Format the SQL query for execution
+            formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+            single_line_query = " ".join(formatted_query.split()).replace("```", "")
+
+            # Execute the formatted query
+            data = read_sql_query(single_line_query)
+
+            # Generate an answer based on the data and user question
+            answer = model.generate_content(
+                f"{default} Answer this question: {question} with results {str(data)}"
+            )
             result_text = answer.candidates[0].content.parts[0].text
 
-            # Store the question and answer in session state
+            # Append the Q&A to session state for later display
             st.session_state.qa_list.append({'question': question, 'answer': result_text})
-            write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
-                
+
+            # Display the most recent question and answer
+            st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
-            st.markdown("---")
-           
-       
+        except Exception as e:
+            # Handle errors gracefully
+            st.error(f"An error occurred: {e}")
 
 
 #login page
