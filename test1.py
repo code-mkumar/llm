@@ -433,7 +433,7 @@ def welcome_page():
         question = st.text_input('Input your question:', key='input')
 
         # Check if question is submitted and handle re-submissions
-        if question.strip() and question != st.session_state.last_question:
+        if question.strip(): 
             try:
                 st.session_state.last_question = question  # Update last question
                 combined_prompt = create_combined_prompt(question, sql_content)
