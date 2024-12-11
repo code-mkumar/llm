@@ -3,6 +3,8 @@ import sqlite3
 import pyotp
 import qrcode
 from io import BytesIO
+from datetime import datetime
+import os
 import google.generativeai as genai
 # Configure Google Gemini API key
 genai.configure(api_key='AIzaSyD3WqHberJDYyzXkmY1zKaoqd5uCJZDetI')
@@ -87,6 +89,19 @@ def read_admin_files():
     with open("admin_sql.txt", "r") as sql_file:
         sql_content = sql_file.read()
     return role_content, sql_content
+def write_content(data):
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    file_path = 'result.txt'
+    
+    # Check if the file exists, if not create it
+    if not os.path.exists(file_path):
+        # Create the file if it doesn't exist
+        with open(file_path, 'w') as file:
+            file.write(f'File created on {current_datetime}\n')
+
+    # Append the data to the file
+    with open(file_path, 'a') as file:
+        file.write(f'{current_datetime} - {data}\n')
 
 # Pages
 def guest_page():
@@ -111,9 +126,9 @@ def guest_page():
     st.title("Welcome, Guest!")
     st.write("You can explore the site as a guest, but you'll need to log in for full role based access.")
     question = st.text_input('Input your question:', key='input')
-    submit = st.button('Ask the question')
+    # submit = st.button('Ask the question')
     default,default_sql = read_default_files()
-    if submit:
+    if question.strip():
         txt=model.generate_content(f"{question} give 1 if the question need sql query or 0")
         #st.write(txt.text)
         data = ''
@@ -133,6 +148,7 @@ def guest_page():
 
             # Store the question and answer in session state
                 st.session_state.qa_list.append({'question': question, 'answer': result_text})
+                write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
                 st.markdown(f"**Question:** {question}")
                 st.markdown(f"**Answer:** {result_text}")
                 st.markdown("---")
@@ -384,6 +400,7 @@ def welcome_page():
 
             # Store the question and answer in session state
                 st.session_state.qa_list.append({'question': question, 'answer': result_text})
+                write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
 
         #     if st.session_state.qa_list:
         #         for qa in reversed(st.session_state.qa_list):
