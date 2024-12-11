@@ -399,12 +399,86 @@ def read_sql_query(sql):
         return f"SQLite error: {e}"
 
 
+# def welcome_page():
+#     with st.sidebar:
+#         if st.button("Logout"):
+#             st.session_state.authenticated = False
+#             st.session_state.page = "login"
+
+#         st.header("Chat history")
+#         if st.session_state.qa_list:
+#             for qa in reversed(st.session_state.qa_list):
+#                 # Display previous questions and answers
+#                 st.markdown(f"**Question:** {qa['question']}")
+#                 st.markdown(f"**Answer:** {qa['answer']}")
+#                 st.markdown("---")
+#         else:
+#             st.info("No previous questions yet!")
+
+#     st.title("Welcome to the ANJAC AI")
+#     st.write(f"Hello, {st.session_state.name}!")
+
+#     if st.session_state.role:
+#         # Initialize session state
+#         if 'qa_list' not in st.session_state:
+#             st.session_state.qa_list = []
+#         if 'last_question' not in st.session_state:
+#             st.session_state.last_question = ""
+
+#         role = st.session_state.role
+#         role_prompt = st.session_state.role_content
+#         sql_content = st.session_state.sql_content
+
+#         # Text input for the question
+#         question = st.text_input('Input your question:', key='input')
+
+#         # Check if question is submitted and handle re-submissions
+#         if question.strip():
+#             try:
+#                 st.session_state.last_question = question  # Update last question
+#                 combined_prompt = create_combined_prompt(question, sql_content)
+#                 response = get_gemini_response(combined_prompt)
+
+#                 # Display the SQL query
+#                 st.write("Generated SQL Query:", response)
+#                 raw_query = response
+#                 formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+#                 single_line_query = " ".join(formatted_query.split()).replace("```", "")
+
+#                 # Query the database
+#                 data = read_sql_query(single_line_query)
+
+#                 if isinstance(data, list):
+#                     # Process data if it's a list
+#                     st.table(data)
+#                 else:
+#                     # Process other types of data
+#                     pass
+
+#                 # Generate response for the question
+#                 answer = model.generate_content(f"student name :{st.session_state.name} role:{role} prompt:{role_prompt} Answer this question: {question} with results {str(data)}")
+#                 result_text = answer.candidates[0].content.parts[0].text
+
+#                 # Store the question and answer in session state
+#                 st.session_state.qa_list.append({'question': question, 'answer': result_text})
+#                 write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
+
+#                 # Display the current question and answer
+#                 st.markdown(f"**Question:** {question}")
+#                 st.markdown(f"**Answer:** {result_text}")
+#                 st.markdown("---")
+#             except Exception as e:
+#                 st.error(f"An error occurred: {e}")
+
+
+import streamlit as st
+
 def welcome_page():
+    # Sidebar for logout and chat history
     with st.sidebar:
         if st.button("Logout"):
             st.session_state.authenticated = False
             st.session_state.page = "login"
-
         st.header("Chat history")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):
@@ -415,6 +489,7 @@ def welcome_page():
         else:
             st.info("No previous questions yet!")
 
+    # Main content
     st.title("Welcome to the ANJAC AI")
     st.write(f"Hello, {st.session_state.name}!")
 
@@ -430,45 +505,46 @@ def welcome_page():
         sql_content = st.session_state.sql_content
 
         # Text input for the question
-        question = st.text_input('Input your question:', key='input')
+        question = st.text_input(
+            'Input your question:',
+            key='input',
+            on_change=lambda: handle_question()
+        )
 
-        # Check if question is submitted and handle re-submissions
-        if question.strip():
-            try:
-                st.session_state.last_question = question  # Update last question
-                combined_prompt = create_combined_prompt(question, sql_content)
-                response = get_gemini_response(combined_prompt)
+def handle_question():
+    question = st.session_state.input.strip()  # Get current input
+    if question and question != st.session_state.last_question:
+        try:
+            st.session_state.last_question = question  # Update last question
+            st.session_state.input = ""  # Clear the input box
 
-                # Display the SQL query
-                st.write("Generated SQL Query:", response)
-                raw_query = response
-                formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-                single_line_query = " ".join(formatted_query.split()).replace("```", "")
+            # Generate the combined prompt and get a response
+            combined_prompt = create_combined_prompt(question, st.session_state.sql_content)
+            response = get_gemini_response(combined_prompt)
 
-                # Query the database
-                data = read_sql_query(single_line_query)
+            # Process the SQL query
+            formatted_query = response.replace("sql", "").strip("'''").strip()
+            single_line_query = " ".join(formatted_query.split()).replace("```", "")
+            data = read_sql_query(single_line_query)
 
-                if isinstance(data, list):
-                    # Process data if it's a list
-                    st.table(data)
-                else:
-                    # Process other types of data
-                    pass
+            # Generate response for the question
+            answer = model.generate_content(
+                f"student name: {st.session_state.name} role: {st.session_state.role} "
+                f"prompt: {st.session_state.role_content} Answer this question: {question} with results: {str(data)}"
+            )
+            result_text = answer.candidates[0].content.parts[0].text
 
-                # Generate response for the question
-                answer = model.generate_content(f"student name :{st.session_state.name} role:{role} prompt:{role_prompt} Answer this question: {question} with results {str(data)}")
-                result_text = answer.candidates[0].content.parts[0].text
+            # Store the question and answer in session state
+            st.session_state.qa_list.append({'question': question, 'answer': result_text})
+            write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
 
-                # Store the question and answer in session state
-                st.session_state.qa_list.append({'question': question, 'answer': result_text})
-                write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
+            # Display the current question and answer
+            st.markdown(f"**Question:** {question}")
+            st.markdown(f"**Answer:** {result_text}")
+            st.markdown("---")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
 
-                # Display the current question and answer
-                st.markdown(f"**Question:** {question}")
-                st.markdown(f"**Answer:** {result_text}")
-                st.markdown("---")
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
 
 
     
