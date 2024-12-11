@@ -112,7 +112,7 @@ def guest_page():
     with st.sidebar:
         if st.button("Go to Login"):
             st.session_state.page = "login"
-            app()
+            # app()
         st.header("Chat history")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):
