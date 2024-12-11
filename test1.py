@@ -142,19 +142,21 @@ def guest_page():
             # print(single_line_query)
             # Query the database
                 data = read_sql_query(single_line_query)
-                # st.write(data)
-                answer = model.generate_content(f"{default} Answer this question: {question} with results {str(data)}")
-                result_text = answer.candidates[0].content.parts[0].text
-
-            # Store the question and answer in session state
-                st.session_state.qa_list.append({'question': question, 'answer': result_text})
-                write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
-                st.markdown(f"**Question:** {question}")
-                st.markdown(f"**Answer:** {result_text}")
-                st.markdown("---")
-            except Exception as e:
+             except Exception as e:
                 st.error(f"An error occured: {e}")
 
+                # st.write(data)
+            answer = model.generate_content(f"{default} Answer this question: {question} with results {str(data)}")
+            result_text = answer.candidates[0].content.parts[0].text
+
+            # Store the question and answer in session state
+            st.session_state.qa_list.append({'question': question, 'answer': result_text})
+            write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
+                
+            st.markdown(f"**Question:** {question}")
+            st.markdown(f"**Answer:** {result_text}")
+            st.markdown("---")
+           
        
 
 
@@ -343,7 +345,7 @@ def welcome_page():
         if st.button("Logout"):
             st.session_state.authenticated = False
             st.session_state.page = "login"
-            app()
+            # app()
         st.header("Chat history")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):
