@@ -165,7 +165,9 @@ def guest_page():
 
     # Sidebar to display previous questions and answers
     with st.sidebar:
-        
+        if st.button("Go to Login"):
+          st.session_state.page = "login"
+            
         st.title("Chat History")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):  # Most recent first
@@ -176,8 +178,7 @@ def guest_page():
             st.info("No previous chats yet.")
 
 # Main page content
-    if st.button("Go to Login"):
-        st.session_state.page = "login"
+
 
     st.title("Welcome, Guest!")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
