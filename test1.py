@@ -410,8 +410,8 @@ def welcome_page():
         #             st.write("---")
              
                 st.markdown(f"**Question:** {question}")
-                    st.markdown(f"**Answer:** {result_text}")
-                    st.markdown("---")
+                st.markdown(f"**Answer:** {result_text}")
+                st.markdown("---")
             except Exception as e:
                 st.error(f"An error occur:{e}")
 
