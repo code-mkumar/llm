@@ -339,7 +339,7 @@ def read_sql_query(sql):
         return f"SQLite error: {e}"
 
 def welcome_page():
-     with st.sidebar:
+    with st.sidebar:
         if st.button("Logout"):
             st.session_state.authenticated = False
             st.session_state.page = "login"
