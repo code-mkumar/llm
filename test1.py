@@ -430,10 +430,10 @@ def welcome_page():
         sql_content = st.session_state.sql_content
 
         # Text input for the question
-        question = st.text_input('Input your question:', key='input')
+         question = st.text_input('Input your question:', key='input', on_change=lambda: process_question())
 
         # Check if question is submitted and handle re-submissions
-        if question.strip(): 
+        if process_question():
             try:
                 st.session_state.last_question = question  # Update last question
                 combined_prompt = create_combined_prompt(question, sql_content)
