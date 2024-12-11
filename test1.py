@@ -93,8 +93,21 @@ def guest_page():
     # Initialize session state
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
-    if st.button("Go to Login"):
-        st.session_state.page = "login"
+    
+    with st.sidebar:
+        if st.button("Go to Login"):
+            st.session_state.page = "login"
+            app()
+        st.header("Chat history")
+        if st.session_state.qa_list:
+            for qa in reversed(st.session_state.qa_list):
+        # Display previous questions and answers
+                st.markdown(f"**Question:** {qa['question']}")
+                st.markdown(f"**Answer:** {qa['answer']}")
+                st.markdown("---")
+        else:
+            st.info("No previous charts yet!")
+        
     st.title("Welcome, Guest!")
     st.write("You can explore the site as a guest, but you'll need to log in for full role based access.")
     question = st.text_input('Input your question:', key='input')
@@ -105,27 +118,28 @@ def guest_page():
         #st.write(txt.text)
         data = ''
         if not txt.text == '0':
-            response=model.generate_content(f"{default_sql}\n\n{question}")
-            raw_query = response.text
-            formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-            print("formatted :",formatted_query)
-            single_line_query = " ".join(formatted_query.split()).replace("```", "")
+            try:
+                response=model.generate_content(f"{default_sql}\n\n{question}")
+                raw_query = response.text
+                formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+                # print("formatted :",formatted_query)
+                single_line_query = " ".join(formatted_query.split()).replace("```", "")
             # print(single_line_query)
             # Query the database
-            data = read_sql_query(single_line_query)
-            st.write(data)
-        answer = model.generate_content(f"{default} Answer this question: {question} with results {str(data)}")
-        result_text = answer.candidates[0].content.parts[0].text
+                data = read_sql_query(single_line_query)
+                # st.write(data)
+                answer = model.generate_content(f"{default} Answer this question: {question} with results {str(data)}")
+                result_text = answer.candidates[0].content.parts[0].text
 
             # Store the question and answer in session state
-        st.session_state.qa_list.append({'question': question, 'answer': result_text})
+                st.session_state.qa_list.append({'question': question, 'answer': result_text})
+                st.markdown(f"**Question:** {question}")
+                st.markdown(f"**Answer:** {result_text}")
+                st.markdown("---")
+            except Exception as e:
+                st.error(f"An error occured: {e}")
 
-        if st.session_state.qa_list:
-            for qa in reversed(st.session_state.qa_list):
-        # Display previous questions and answers
-                st.write(f"**Question:** {qa['question']}")
-                st.write(f"**Answer:** {qa['answer']}")
-                st.write("---")
+       
 
 
 #login page
@@ -309,9 +323,21 @@ def read_sql_query(sql):
         return f"SQLite error: {e}"
 
 def welcome_page():
-    if st.button("Logout"):
-        st.session_state.authenticated = False
-        st.session_state.page = "login"
+     with st.sidebar:
+        if st.button("Logout"):
+            st.session_state.authenticated = False
+            st.session_state.page = "login"
+            app()
+        st.header("Chat history")
+        if st.session_state.qa_list:
+            for qa in reversed(st.session_state.qa_list):
+        # Display previous questions and answers
+                st.markdown(f"**Question:** {qa['question']}")
+                st.markdown(f"**Answer:** {qa['answer']}")
+                st.markdown("---")
+        else:
+            st.info("No previous charts yet!")
+    
     st.title("Welcome to the ANJAC AI")
     st.write(f"Hello, {st.session_state.name}!")
     if st.session_state.role:
@@ -326,44 +352,52 @@ def welcome_page():
         role_prompt=st.session_state.role_content
         sql_content = st.session_state.sql_content
         question = st.text_input('Input your question:', key='input')
-        submit = st.button('Ask the question')
+        # submit = st.button('Ask the question')
 
-        if submit:
-            combined_prompt = create_combined_prompt(question, sql_content)
-            response = get_gemini_response(combined_prompt)
+        if question.strip():
+            try:
+                combined_prompt = create_combined_prompt(question, sql_content)
+                response = get_gemini_response(combined_prompt)
 
             # Display the SQL query
-            st.write("Generated SQL Query:", response)
-            raw_query = response
-            formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-            # print("formatted :",formatted_query)
-            single_line_query = " ".join(formatted_query.split()).replace("```", "")
+                st.write("Generated SQL Query:", response)
+                raw_query = response
+                formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+            #     print("formatted :",formatted_query)
+                single_line_query = " ".join(formatted_query.split()).replace("```", "")
             # print(single_line_query)
             # Query the database
-            data = read_sql_query(single_line_query)
+                data = read_sql_query(single_line_query)
 
-            if isinstance(data, list):
+                if isinstance(data, list):
                 #st.write("according to,")
                 #st.table(data)
-                pass
+                    pass
                 
-            else:
+                else:
                 #st.write(data)
                 # Display any errors
-                pass
+                    pass
             # Generate response for the question and answer
-            answer = model.generate_content(f"student name :{st.session_state.name} role:{role} prompt:{role_prompt} Answer this question: {question} with results {str(data)}")
-            result_text = answer.candidates[0].content.parts[0].text
+                answer = model.generate_content(f"student name :{st.session_state.name} role:{role} prompt:{role_prompt} Answer this question: {question} with results {str(data)}")
+                result_text = answer.candidates[0].content.parts[0].text
 
             # Store the question and answer in session state
-            st.session_state.qa_list.append({'question': question, 'answer': result_text})
+                st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
-            if st.session_state.qa_list:
-                for qa in reversed(st.session_state.qa_list):
-        # Display previous questions and answers
-                    st.write(f"**Question:** {qa['question']}")
-                    st.write(f"**Answer:** {qa['answer']}")
-                    st.write("---")
+        #     if st.session_state.qa_list:
+        #         for qa in reversed(st.session_state.qa_list):
+        # # Display previous questions and answers
+        #             st.write(f"**Question:** {qa['question']}")
+        #             st.write(f"**Answer:** {qa['answer']}")
+        #             st.write("---")
+             
+                st.markdown(f"**Question:** {question}")
+                    st.markdown(f"**Answer:** {result_text}")
+                    st.markdown("---")
+            except Exception as e:
+                st.error(f"An error occur:{e}")
+
 
     
 
