@@ -398,13 +398,13 @@ def read_sql_query(sql):
         print(e)
         return f"SQLite error: {e}"
 
-import streamlit as st
 
 def welcome_page():
     with st.sidebar:
         if st.button("Logout"):
             st.session_state.authenticated = False
             st.session_state.page = "login"
+
         st.header("Chat history")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):
@@ -422,6 +422,8 @@ def welcome_page():
         # Initialize session state
         if 'qa_list' not in st.session_state:
             st.session_state.qa_list = []
+        if 'last_question' not in st.session_state:
+            st.session_state.last_question = ""
 
         role = st.session_state.role
         role_prompt = st.session_state.role_content
@@ -429,10 +431,11 @@ def welcome_page():
 
         # Text input for the question
         question = st.text_input('Input your question:', key='input')
-        submit = st.button('Ask the question')
 
-        if submit and question.strip():
+        # Check if question is submitted and handle re-submissions
+        if question.strip() and question != st.session_state.last_question:
             try:
+                st.session_state.last_question = question  # Update last question
                 combined_prompt = create_combined_prompt(question, sql_content)
                 response = get_gemini_response(combined_prompt)
 
