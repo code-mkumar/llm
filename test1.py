@@ -450,7 +450,7 @@ def welcome_page():
 
                 if isinstance(data, list):
                     # Process data if it's a list
-                    pass
+                    st.table(data)
                 else:
                     # Process other types of data
                     pass
