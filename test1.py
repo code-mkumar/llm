@@ -165,6 +165,7 @@ def guest_page():
 
     # Sidebar to display previous questions and answers
     with st.sidebar:
+        
         st.title("Chat History")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):  # Most recent first
