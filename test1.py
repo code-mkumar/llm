@@ -497,9 +497,7 @@ def welcome_page():
         # Initialize session state
         if 'qa_list' not in st.session_state:
             st.session_state.qa_list = []
-        if 'last_question' not in st.session_state:
-            st.session_state.last_question = ""
-
+      
         role = st.session_state.role
         role_prompt = st.session_state.role_content
         sql_content = st.session_state.sql_content
@@ -507,43 +505,42 @@ def welcome_page():
         # Text input for the question
         question = st.text_input(
             'Input your question:',
-            key='input',
-            on_change=lambda: handle_question()
+            key='input'
         )
+        submit=st.button("Ask question")
 
-def handle_question():
-    question = st.session_state.input.strip()  # Get current input
-    if question and question != st.session_state.last_question:
-        try:
-            st.session_state.last_question = question  # Update last question
-            st.session_state.input = ""  # Clear the input box
 
-            # Generate the combined prompt and get a response
-            combined_prompt = create_combined_prompt(question, st.session_state.sql_content)
-            response = get_gemini_response(combined_prompt)
+    
+        if submit:
+            try:
+               
 
-            # Process the SQL query
-            formatted_query = response.replace("sql", "").strip("'''").strip()
-            single_line_query = " ".join(formatted_query.split()).replace("```", "")
-            data = read_sql_query(single_line_query)
+                # Generate the combined prompt and get a response
+                combined_prompt = create_combined_prompt(question, st.session_state.sql_content)
+                response = get_gemini_response(combined_prompt)
 
-            # Generate response for the question
-            answer = model.generate_content(
+                # Process the SQL query
+                formatted_query = response.replace("sql", "").strip("'''").strip()
+                single_line_query = " ".join(formatted_query.split()).replace("```", "")
+                data = read_sql_query(single_line_query)
+
+                # Generate response for the question
+                answer = model.generate_content(
                 f"student name: {st.session_state.name} role: {st.session_state.role} "
                 f"prompt: {st.session_state.role_content} Answer this question: {question} with results: {str(data)}"
-            )
-            result_text = answer.candidates[0].content.parts[0].text
+                )
+                result_text = answer.candidates[0].content.parts[0].text
 
-            # Store the question and answer in session state
-            st.session_state.qa_list.append({'question': question, 'answer': result_text})
-            write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
+                # Store the question and answer in session state
+                st.session_state.qa_list.append({'question': question, 'answer': result_text})
+                write_content({'query': single_line_query, 'data': data, 'question': question, 'answer': result_text})
 
-            # Display the current question and answer
-            st.markdown(f"**Question:** {question}")
-            st.markdown(f"**Answer:** {result_text}")
-            st.markdown("---")
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
+                # Display the current question and answer
+                st.markdown(f"**Question:** {question}")
+                st.markdown(f"**Answer:** {result_text}")
+                st.markdown("---")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
 
 
 
