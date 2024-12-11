@@ -430,7 +430,7 @@ def welcome_page():
         sql_content = st.session_state.sql_content
 
         # Text input for the question
-         question = st.text_input('Input your question:', key='input', on_change=lambda: process_question())
+        question = st.text_input('Input your question:', key='input', on_change=lambda: process_question())
 
         # Check if question is submitted and handle re-submissions
         if process_question():
