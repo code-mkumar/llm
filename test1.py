@@ -158,14 +158,9 @@ def write_content(data):
 #             st.markdown("---")
            
 
-def guest_page():
-    
+import streamlit as st
 
-    # Main page content
-    st.title("Welcome, Guest!")
-    st.subheader("Hi, I'm ANJAC AI ")
-    st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
-   
+def guest_page():
     # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
@@ -176,21 +171,10 @@ def guest_page():
     if 'question_input' not in st.session_state:
         st.session_state.question_input = ""  # Initialize the question input
 
-        # Sidebar to display previous questions and answers
-    with st.sidebar:
-        if st.button("Go to Login"):
-            st.session_state.page = "login"
-
-        st.title("Chat History")
-        if st.session_state.qa_list:
-            for qa in reversed(st.session_state.qa_list):  # Most recent first
-                st.markdown(f"**Question:** {qa['question']}")
-                st.markdown(f"**Answer:** {qa['answer']}")
-                st.markdown("---")
-        else:
-            st.info("No previous chats yet.")
-
-
+    # Main page content - Top of the page
+    st.title("Welcome, Guest!")
+    st.subheader("Hi, I'm ANJAC AI ")
+    st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
     # Function to process and clear text input after processing
     def process_and_clear():
@@ -219,7 +203,7 @@ def guest_page():
                 # Append the Q&A to session state for later display
                 st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
-                # Display the most recent question and answer
+                # Display the most recent question and answer below the main content
                 st.success("Your question has been processed successfully!")
                 st.markdown(f"**Question:** {question}")
                 st.markdown(f"**Answer:** {result_text}")
@@ -234,14 +218,29 @@ def guest_page():
                 # Handle errors gracefully
                 st.error(f"An error occurred: {e}")
 
-    # Input field for the user's question
-    question = st.text_area(
+    # Sidebar to display previous questions and answers (optional)
+    with st.sidebar:
+        if st.button("Go to Login"):
+            st.session_state.page = "login"
+
+        st.title("Chat History")
+        if st.session_state.qa_list:
+            for qa in reversed(st.session_state.qa_list):  # Most recent first
+                st.markdown(f"**Question:** {qa['question']}")
+                st.markdown(f"**Answer:** {qa['answer']}")
+                st.markdown("---")
+        else:
+            st.info("No previous chats yet.")
+
+    # Input field for the user's question - Fixed at the bottom of the page
+    st.text_area(
         'Input your question:',
         placeholder="Type your question and press Enter",
         key="question_input",
         value=st.session_state.question_input,  # Bind to session state
         on_change=process_and_clear  # Process and clear on change
     )
+
 
 
 
