@@ -158,6 +158,7 @@ def write_content(data):
 #             st.markdown("---")
            
        
+import streamlit as st
 
 def guest_page():
     # Initialize session state for storing Q&A history
@@ -186,23 +187,17 @@ def guest_page():
     st.subheader("Hi, I'm ANJAC AI ")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
-    # Function to process and clear text input after processing
-    def process_and_clear():
-        st.session_state.last_question = st.session_state.question_input
-        st.session_state.question_input = ""  # Clear input field after processing
-
     # Input field for the user's question
     question = st.text_input(
         'Input your question:',
         placeholder="Type your question and press Enter",
-        key="question_input",
-        on_change=process_and_clear  # Clear on change
+        key="question_input"
     )
 
     # Process the question if entered
     if question.strip() and question != st.session_state.last_question:
         try:
-            # Generate SQL query using the model
+            # Process the question after input is received
             default, default_sql = read_default_files()
             response = model.generate_content(f"{default_sql}\n\n{question}")
             raw_query = response.text
@@ -227,7 +222,12 @@ def guest_page():
             st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
-        
+
+            # Clear the input field after processing
+            st.session_state.question_input = ""  # Clear the input field
+
+            # Update last_question to avoid reprocessing the same question
+            st.session_state.last_question = question
 
         except Exception as e:
             # Handle errors gracefully
