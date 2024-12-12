@@ -163,14 +163,11 @@ def guest_page():
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
 
-    if 'input' not in st.session_state:
-        st.session_state.input = ""  # Initialize input state
-
     # Sidebar to display previous questions and answers
     with st.sidebar:
         if st.button("Go to Login"):
-          st.session_state.page = "login"
-            
+            st.session_state.page = "login"
+
         st.title("Chat History")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):  # Most recent first
@@ -180,19 +177,21 @@ def guest_page():
         else:
             st.info("No previous chats yet.")
 
-# Main page content
-
-
+    # Main page content
     st.title("Welcome, Guest!")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
-    # Input field for the user's question (submit on Enter key)
-    question = st.text_input('Input your question:',value=st.session_state.input, key='input', placeholder="Type your question and press Enter")
-    default, default_sql = read_default_files()
+    # Input field for the user's question
+    question = st.text_input(
+        'Input your question:',
+        placeholder="Type your question and press Enter",
+    )
 
-    if question.strip():  # Process only if the question is non-empty
+    # Process the question if entered
+    if question.strip():
         try:
             # Generate SQL query using the model
+            default, default_sql = read_default_files()
             response = model.generate_content(f"{default_sql}\n\n{question}")
             raw_query = response.text
 
@@ -212,15 +211,17 @@ def guest_page():
             # Append the Q&A to session state for later display
             st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
-            st.session_state.input = ""
-
             # Display the most recent question and answer
             st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
+
+            # Refresh the page to clear the input field
+            st.experimental_rerun()
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
+
 
 #login page
 # def login_page():
