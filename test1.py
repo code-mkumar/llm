@@ -482,7 +482,6 @@ def read_sql_query(sql):
 #                 st.error(f"An error occurred: {e}")
 
 
-import streamlit as st
 
 def welcome_page():
     # Sidebar for logout and chat history
@@ -519,13 +518,9 @@ def welcome_page():
             key='input'
         )
         submit=st.button("Ask question")
-
-
     
         if submit:
-            try:
-               
-
+            try:               
                 # Generate the combined prompt and get a response
                 combined_prompt = create_combined_prompt(question, st.session_state.sql_content)
                 response = get_gemini_response(combined_prompt)
@@ -552,7 +547,6 @@ def welcome_page():
                 st.markdown("---")
             except Exception as e:
                 st.error(f"An error occurred: {e}")
-
 
 
     
