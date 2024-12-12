@@ -168,7 +168,7 @@ def guest_page():
     if 'question_input' not in st.session_state:
         st.session_state.question_input = ""  # Initialize the question input
 
-    # Main page content - always at the top
+    # Main page content - Top of the page
     st.title("Welcome, Guest!")
     st.subheader("Hi, I'm ANJAC AI ")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
@@ -229,13 +229,6 @@ def guest_page():
         else:
             st.info("No previous chats yet.")
 
-    # Display the previous Q&A below the main content
-    if st.session_state.qa_list:
-        for qa in reversed(st.session_state.qa_list):  # Most recent first
-            st.markdown(f"**Question:** {qa['question']}")
-            st.markdown(f"**Answer:** {qa['answer']}")
-            st.markdown("---")
-
     # Input field for the user's question - Fixed at the bottom of the page
     st.text_area(
         'Input your question:',
@@ -244,7 +237,6 @@ def guest_page():
         value=st.session_state.question_input,  # Bind to session state
         on_change=process_and_clear  # Process and clear on change
     )
-
 #login page
 # def login_page():
 #     st.title("Login")
