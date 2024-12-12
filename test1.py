@@ -163,6 +163,9 @@ def guest_page():
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
 
+    if 'last_question' not in st.session_state:
+        st.session_state.last_question = ""  # Track the last processed question
+
     # Sidebar to display previous questions and answers
     with st.sidebar:
         if st.button("Go to Login"):
@@ -184,11 +187,12 @@ def guest_page():
     # Input field for the user's question
     question = st.text_input(
         'Input your question:',
+        value="" if st.session_state.last_question == "" else st.session_state.last_question,
         placeholder="Type your question and press Enter",
     )
 
     # Process the question if entered
-    if question.strip():
+    if question.strip() and question != st.session_state.last_question:
         try:
             # Generate SQL query using the model
             default, default_sql = read_default_files()
@@ -211,17 +215,20 @@ def guest_page():
             # Append the Q&A to session state for later display
             st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
+            # Update last question to avoid reprocessing
+            st.session_state.last_question = question
+
             # Display the most recent question and answer
             st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
-
-            # Refresh the page to clear the input field
-            st.experimental_rerun()
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
 
+    # Clear the last_question field after rendering the page
+    if st.session_state.last_question == question:
+        st.session_state.last_question = ""
 
 #login page
 # def login_page():
