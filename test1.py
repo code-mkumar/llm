@@ -158,6 +158,8 @@ def write_content(data):
 #             st.markdown("---")
            
        
+import streamlit as st
+
 def guest_page():
     # Initialize session state for Q&A history and last processed question
     if 'qa_list' not in st.session_state:
@@ -189,12 +191,7 @@ def guest_page():
         placeholder="Type your question and press Enter",
     )
 
-    # Button to clear the input field
-    if st.button("Clear Input"):
-        st.session_state.last_question = ""
-        st.experimental_rerun()
-
-    # Process the question
+    # Process the question when entered
     if question.strip() and question != st.session_state.last_question:
         try:
             # Process question and generate SQL query
@@ -210,6 +207,11 @@ def guest_page():
             st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
+
+            # Automatically clear the input box after processing
+            st.session_state.last_question = ""  # Reset the question field
+            st.experimental_rerun()  # Rerun the app to clear the input
+
         except Exception as e:
             # Display error message
             st.error(f"An error occurred: {e}")
@@ -227,7 +229,6 @@ def process_question(question):
     )
     result_text = answer.candidates[0].content.parts[0].text
     return response, result_text
-
 
 #login page
 # def login_page():
