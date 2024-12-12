@@ -227,12 +227,13 @@ def guest_page():
             st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
+            test=process_and_clear()
 
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
 
-process_and_clear()
+
 
 #login page
 # def login_page():
