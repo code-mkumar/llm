@@ -231,7 +231,7 @@ def guest_page():
                 st.error(f"An error occurred: {e}")
 
     # Input field for the user's question
-    question = st.text_input(
+    question = st.text_area(
         'Input your question:',
         placeholder="Type your question and press Enter",
         key="question_input",
