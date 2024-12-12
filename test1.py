@@ -223,7 +223,7 @@ def guest_page():
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
 
-            st.text_input('Input your question:', value="", key="clear")
+          
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
@@ -351,7 +351,7 @@ def otp_verification_page():
 
     otp = st.text_input("Enter OTP", type="password")
     if st.button("Verify"):
-        if not verify_otp(secret, otp):
+        if verify_otp(secret, otp):
             st.success("OTP Verified! Welcome.")
             _, role, name = get_user_details(user_id)
             st.session_state.id=user_id
