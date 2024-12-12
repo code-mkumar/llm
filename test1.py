@@ -223,7 +223,7 @@ def guest_page():
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
 
-            question = st.text_input()
+            
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
