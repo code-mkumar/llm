@@ -159,6 +159,12 @@ def write_content(data):
            
 
 def guest_page():
+
+    # Main page content
+    st.title("Welcome, Guest!")
+    st.subheader("Hi, I'm ANJAC AI ")
+    st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
+   
     # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
@@ -183,10 +189,6 @@ def guest_page():
         else:
             st.info("No previous chats yet.")
 
-    # Main page content
-    st.title("Welcome, Guest!")
-    st.subheader("Hi, I'm ANJAC AI ")
-    st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
     # Function to process and clear text input after processing
     def process_and_clear():
