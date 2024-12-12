@@ -163,6 +163,9 @@ def guest_page():
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
 
+    if 'input' not in st.session_state:
+        st.session_state.input = ""  # Initialize input state
+
     # Sidebar to display previous questions and answers
     with st.sidebar:
         if st.button("Go to Login"):
@@ -184,7 +187,7 @@ def guest_page():
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
     # Input field for the user's question (submit on Enter key)
-    question = st.text_input('Input your question:', key='input', placeholder="Type your question and press Enter")
+    question = st.text_input('Input your question:',value=st.session_state.input, key='input', placeholder="Type your question and press Enter")
     default, default_sql = read_default_files()
 
     if question.strip():  # Process only if the question is non-empty
@@ -208,6 +211,8 @@ def guest_page():
 
             # Append the Q&A to session state for later display
             st.session_state.qa_list.append({'question': question, 'answer': result_text})
+
+             st.session_state.input = ""
 
             # Display the most recent question and answer
             st.success("Your question has been processed successfully!")
