@@ -158,7 +158,6 @@ def write_content(data):
 #             st.markdown("---")
            
        
-import streamlit as st
 
 def guest_page():
     # Initialize session state for Q&A history and last processed question
@@ -208,9 +207,8 @@ def guest_page():
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
 
-            # Automatically clear the input box after processing
-            st.session_state.last_question = ""  # Reset the question field
-            st.experimental_rerun()  # Rerun the app to clear the input
+            # Reset the input field by updating the session state value
+            st.session_state.last_question = ""  # Clear the input field
 
         except Exception as e:
             # Display error message
@@ -218,6 +216,8 @@ def guest_page():
 
 # Helper function to process the question
 def process_question(question):
+    # Simulating SQL query processing (replace with actual logic)
+    # Replace `read_default_files()` and model queries with actual code
     default, default_sql = read_default_files()
     response = model.generate_content(f"{default_sql}\n\n{question}")
     raw_query = response.text
