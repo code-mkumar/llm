@@ -162,15 +162,14 @@ def guest_page():
     # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
-
     if 'input' not in st.session_state:
         st.session_state.input = ""  # Initialize input state
 
     # Sidebar to display previous questions and answers
     with st.sidebar:
         if st.button("Go to Login"):
-          st.session_state.page = "login"
-            
+            st.session_state.page = "login"
+
         st.title("Chat History")
         if st.session_state.qa_list:
             for qa in reversed(st.session_state.qa_list):  # Most recent first
@@ -180,14 +179,20 @@ def guest_page():
         else:
             st.info("No previous chats yet.")
 
-# Main page content
-
-
+    # Main page content
     st.title("Welcome, Guest!")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
+    # Callback to clear input
+    def clear_input():
+        st.session_state.input = ""
+
     # Input field for the user's question (submit on Enter key)
-    question = st.text_input('Input your question:',value=st.session_state.input, key='input', placeholder="Type your question and press Enter")
+    question = st.text_input('Input your question:',
+                              key='input',
+                              placeholder="Type your question and press Enter",
+                              on_change=clear_input)
+
     default, default_sql = read_default_files()
 
     if question.strip():  # Process only if the question is non-empty
@@ -211,8 +216,6 @@ def guest_page():
 
             # Append the Q&A to session state for later display
             st.session_state.qa_list.append({'question': question, 'answer': result_text})
-
-            st.session_state.input = ""
 
             # Display the most recent question and answer
             st.success("Your question has been processed successfully!")
