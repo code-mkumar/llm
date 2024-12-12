@@ -183,47 +183,49 @@ def guest_page():
     st.title("Welcome, Guest!")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
-    # Callback to clear input
-    def clear_input():
-        st.session_state.input = ""
-
-    # Input field for the user's question (submit on Enter key)
+    # Input field for the user's question
     question = st.text_input('Input your question:',
+                              value=st.session_state.input,
                               key='input',
-                              placeholder="Type your question and press Enter",
-                              on_change=clear_input)
+                              placeholder="Type your question and press Enter")
 
-    default, default_sql = read_default_files()
+    # Process the question only if it's submitted and non-empty
+    if st.button("Submit"):
+        if question.strip():  # Process only if the question is non-empty
+            try:
+                # Generate SQL query using the model
+                default, default_sql = read_default_files()
+                response = model.generate_content(f"{default_sql}\n\n{question}")
+                raw_query = response.text
 
-    if question.strip():  # Process only if the question is non-empty
-        try:
-            # Generate SQL query using the model
-            response = model.generate_content(f"{default_sql}\n\n{question}")
-            raw_query = response.text
+                # Format the SQL query for execution
+                formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+                single_line_query = " ".join(formatted_query.split()).replace("```", "")
 
-            # Format the SQL query for execution
-            formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-            single_line_query = " ".join(formatted_query.split()).replace("```", "")
+                # Execute the formatted query
+                data = read_sql_query(single_line_query)
 
-            # Execute the formatted query
-            data = read_sql_query(single_line_query)
+                # Generate an answer based on the data and user question
+                answer = model.generate_content(
+                    f"{default} Answer this question: {question} with results {str(data)}"
+                )
+                result_text = answer.candidates[0].content.parts[0].text
 
-            # Generate an answer based on the data and user question
-            answer = model.generate_content(
-                f"{default} Answer this question: {question} with results {str(data)}"
-            )
-            result_text = answer.candidates[0].content.parts[0].text
+                # Append the Q&A to session state for later display
+                st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
-            # Append the Q&A to session state for later display
-            st.session_state.qa_list.append({'question': question, 'answer': result_text})
+                # Clear the input field
+                st.session_state.input = ""
 
-            # Display the most recent question and answer
-            st.success("Your question has been processed successfully!")
-            st.markdown(f"**Question:** {question}")
-            st.markdown(f"**Answer:** {result_text}")
-        except Exception as e:
-            # Handle errors gracefully
-            st.error(f"An error occurred: {e}")
+                # Display the most recent question and answer
+                st.success("Your question has been processed successfully!")
+                st.markdown(f"**Question:** {question}")
+                st.markdown(f"**Answer:** {result_text}")
+            except Exception as e:
+                # Handle errors gracefully
+                st.error(f"An error occurred: {e}")
+        else:
+            st.warning("Please enter a question before submitting.")
 
 
 #login page
