@@ -159,6 +159,21 @@ def write_content(data):
            
 
 def guest_page():
+    
+      # Sidebar to display previous questions and answers
+    with st.sidebar:
+        if st.button("Go to Login"):
+            st.session_state.page = "login"
+
+        st.title("Chat History")
+        if st.session_state.qa_list:
+            for qa in reversed(st.session_state.qa_list):  # Most recent first
+                st.markdown(f"**Question:** {qa['question']}")
+                st.markdown(f"**Answer:** {qa['answer']}")
+                st.markdown("---")
+        else:
+            st.info("No previous chats yet.")
+
 
     # Main page content
     st.title("Welcome, Guest!")
@@ -175,20 +190,7 @@ def guest_page():
     if 'question_input' not in st.session_state:
         st.session_state.question_input = ""  # Initialize the question input
 
-    # Sidebar to display previous questions and answers
-    with st.sidebar:
-        if st.button("Go to Login"):
-            st.session_state.page = "login"
-
-        st.title("Chat History")
-        if st.session_state.qa_list:
-            for qa in reversed(st.session_state.qa_list):  # Most recent first
-                st.markdown(f"**Question:** {qa['question']}")
-                st.markdown(f"**Answer:** {qa['answer']}")
-                st.markdown("---")
-        else:
-            st.info("No previous chats yet.")
-
+  
 
     # Function to process and clear text input after processing
     def process_and_clear():
