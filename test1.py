@@ -162,8 +162,6 @@ def guest_page():
     # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
-    if 'input' not in st.session_state:
-        st.session_state.input = ""  # Initialize input state
 
     # Sidebar to display previous questions and answers
     with st.sidebar:
@@ -187,15 +185,14 @@ def guest_page():
     question = st.text_input(
         'Input your question:',
         value="",
-        key='input',
         placeholder="Type your question and press Enter",
     )
 
-    default, default_sql = read_default_files()
-
+    # Check if question is entered
     if question.strip():  # Process only if the question is non-empty
         try:
             # Generate SQL query using the model
+            default, default_sql = read_default_files()
             response = model.generate_content(f"{default_sql}\n\n{question}")
             raw_query = response.text
 
@@ -220,8 +217,8 @@ def guest_page():
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
 
-            # Clear the input field by resetting session state
-            st.session_state.input = ""
+            # Clear the input by refreshing the page
+            st.experimental_rerun()
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
