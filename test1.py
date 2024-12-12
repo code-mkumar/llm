@@ -159,6 +159,8 @@ def write_content(data):
            
 
 
+import streamlit as st
+
 def guest_page():
     # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
@@ -194,13 +196,6 @@ def guest_page():
         # Process the question if it's valid
         if st.session_state.question_input.strip() and st.session_state.question_input != st.session_state.last_question:
             try:
-                question = st.text_input(
-                    'Input your question:',
-                    placeholder="Type your question and press Enter",
-                    key="question_input",
-                    value=st.session_state.question_input,  # Bind to session state
-                    on_change=process_and_clear  # Process and clear on change
-                    )
                 question = st.session_state.question_input
                 default, default_sql = read_default_files()
                 response = model.generate_content(f"{default_sql}\n\n{question}")
@@ -238,7 +233,14 @@ def guest_page():
                 st.error(f"An error occurred: {e}")
 
     # Input field for the user's question
-  
+    question = st.text_input(
+        'Input your question:',
+        placeholder="Type your question and press Enter",
+        key="question_input",
+        value=st.session_state.question_input,  # Bind to session state
+        on_change=process_and_clear  # Process and clear on change
+    )
+
 
 #login page
 # def login_page():
