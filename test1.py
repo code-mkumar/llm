@@ -194,7 +194,7 @@ def guest_page():
         # Process the question if it's valid
         if st.session_state.question_input.strip() and st.session_state.question_input != st.session_state.last_question:
             try:
-                  question = st.text_input(
+                question = st.text_input(
                     'Input your question:',
                     placeholder="Type your question and press Enter",
                     key="question_input",
