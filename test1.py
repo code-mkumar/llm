@@ -196,7 +196,7 @@ def guest_page():
         'Input your question:',
         placeholder="Type your question and press Enter",
         key="question_input",
-        # on_change=process_and_clear  # Clear on change
+        on_change=process_and_clear  # Clear on change
     )
 
     # Process the question if entered
@@ -227,7 +227,7 @@ def guest_page():
             st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
-            test=process_and_clear()
+        
 
         except Exception as e:
             # Handle errors gracefully
