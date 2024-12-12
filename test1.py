@@ -352,7 +352,7 @@ def otp_verification_page():
 
     otp = st.text_input("Enter OTP", type="password")
     if st.button("Verify"):
-        if not verify_otp(secret, otp):
+        if verify_otp(secret, otp):
             st.success("OTP Verified! Welcome.")
             _, role, name = get_user_details(user_id)
             st.session_state.id=user_id
