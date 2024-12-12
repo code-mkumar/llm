@@ -158,9 +158,6 @@ def write_content(data):
 #             st.markdown("---")
            
 
-
-import streamlit as st
-
 def guest_page():
     # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
@@ -197,16 +194,17 @@ def guest_page():
         if st.session_state.question_input.strip() and st.session_state.question_input != st.session_state.last_question:
             try:
                 question = st.session_state.question_input
-                default, default_sql = read_default_files()
+                # Simulate model processing and generate a response
+                default, default_sql = read_default_files()  # Placeholder function for reading default files
                 response = model.generate_content(f"{default_sql}\n\n{question}")
                 raw_query = response.text
 
-                # Format the SQL query for execution
+                # Format the SQL query for execution (example)
                 formatted_query = raw_query.replace("sql", "").strip("'''").strip()
                 single_line_query = " ".join(formatted_query.split()).replace("```", "")
 
-                # Execute the formatted query
-                data = read_sql_query(single_line_query)
+                # Execute the formatted query (simulate)
+                data = read_sql_query(single_line_query)  # Placeholder function for reading SQL query
 
                 # Generate an answer based on the data and user question
                 answer = model.generate_content(
@@ -240,6 +238,7 @@ def guest_page():
         value=st.session_state.question_input,  # Bind to session state
         on_change=process_and_clear  # Process and clear on change
     )
+
 
 
 #login page
