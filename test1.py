@@ -212,7 +212,7 @@ def guest_page():
             # Append the Q&A to session state for later display
             st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
-             st.session_state.input = ""
+            st.session_state.input = ""
 
             # Display the most recent question and answer
             st.success("Your question has been processed successfully!")
