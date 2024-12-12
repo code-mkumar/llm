@@ -159,21 +159,19 @@ def write_content(data):
            
        
 def guest_page():
-    # Initialize session state for storing Q&A history
+    # Initialize session state for Q&A history and last processed question
     if 'qa_list' not in st.session_state:
         st.session_state.qa_list = []
-
     if 'last_question' not in st.session_state:
-        st.session_state.last_question = ""  # Track the last processed question
+        st.session_state.last_question = ""
 
-    # Sidebar to display previous questions and answers
+    # Sidebar: Chat history and login navigation
     with st.sidebar:
         if st.button("Go to Login"):
             st.session_state.page = "login"
-
         st.title("Chat History")
         if st.session_state.qa_list:
-            for qa in reversed(st.session_state.qa_list):  # Most recent first
+            for qa in reversed(st.session_state.qa_list):  # Display most recent first
                 st.markdown(f"**Question:** {qa['question']}")
                 st.markdown(f"**Answer:** {qa['answer']}")
                 st.markdown("---")
@@ -184,51 +182,52 @@ def guest_page():
     st.title("Welcome, Guest!")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
-    # Input field for the user's question
+    # Text input for user's question
     question = st.text_input(
         'Input your question:',
-        value="" if st.session_state.last_question == "" else st.session_state.last_question,
+        value=st.session_state.last_question,
         placeholder="Type your question and press Enter",
     )
 
-    # Process the question if entered
+    # Button to clear the input field
+    if st.button("Clear Input"):
+        st.session_state.last_question = ""
+        st.experimental_rerun()
+
+    # Process the question
     if question.strip() and question != st.session_state.last_question:
         try:
-            # Generate SQL query using the model
-            default, default_sql = read_default_files()
-            response = model.generate_content(f"{default_sql}\n\n{question}")
-            raw_query = response.text
+            # Process question and generate SQL query
+            response, result_text = process_question(question)
 
-            # Format the SQL query for execution
-            formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-            single_line_query = " ".join(formatted_query.split()).replace("```", "")
-
-            # Execute the formatted query
-            data = read_sql_query(single_line_query)
-
-            # Generate an answer based on the data and user question
-            answer = model.generate_content(
-                f"{default} Answer this question: {question} with results {str(data)}"
-            )
-            result_text = answer.candidates[0].content.parts[0].text
-
-            # Append the Q&A to session state for later display
+            # Append Q&A to session state
             st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
-            # Update last question to avoid reprocessing
+            # Update last_question to avoid duplicate processing
             st.session_state.last_question = question
 
-            # Display the most recent question and answer
+            # Display the processed result
             st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
         except Exception as e:
-            # Handle errors gracefully
+            # Display error message
             st.error(f"An error occurred: {e}")
 
-    # Clear the last_question field after rendering the page
-    if st.session_state.last_question == question:
-        st.session_state.last_question = ""
+# Helper function to process the question
+def process_question(question):
+    default, default_sql = read_default_files()
+    response = model.generate_content(f"{default_sql}\n\n{question}")
+    raw_query = response.text
+    formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+    single_line_query = " ".join(formatted_query.split()).replace("```", "")
+    data = read_sql_query(single_line_query)
+    answer = model.generate_content(
+        f"{default} Answer this question: {question} with results {str(data)}"
+    )
+    result_text = answer.candidates[0].content.parts[0].text
+    return response, result_text
+
 
 #login page
 # def login_page():
