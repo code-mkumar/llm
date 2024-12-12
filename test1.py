@@ -186,7 +186,7 @@ def guest_page():
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
     # Input field for the user's question
-    question = st.text_area(
+    question = st.text_input(
         'Input your question:',
         placeholder="Type your question and press Enter",
     )
@@ -441,7 +441,7 @@ def welcome_page():
         sql_content = st.session_state.sql_content
 
         # Text input for the question
-        question = st.text_area('Input your question:', key='input')
+        question = st.text_input('Input your question:', key='input')
 
         # Check if question is submitted and handle re-submissions
         if question.strip():
