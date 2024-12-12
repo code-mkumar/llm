@@ -157,8 +157,6 @@ def write_content(data):
 #             st.markdown(f"**Answer:** {result_text}")
 #             st.markdown("---")
            
-       
-import streamlit as st
 
 def guest_page():
     # Initialize session state for storing Q&A history
