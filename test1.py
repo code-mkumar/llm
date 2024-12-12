@@ -186,10 +186,17 @@ def guest_page():
     st.subheader("Hi, I'm ANJAC AI ")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
+    # Function to process and clear text input after processing
+    def process_and_clear():
+        st.session_state.last_question = st.session_state.question_input
+        st.session_state.question_input = ""  # Clear input field after processing
+
     # Input field for the user's question
-    question = st.text_area(
+    question = st.text_input(
         'Input your question:',
         placeholder="Type your question and press Enter",
+        key="question_input",
+        on_change=process_and_clear  # Clear on change
     )
 
     # Process the question if entered
@@ -216,20 +223,14 @@ def guest_page():
             # Append the Q&A to session state for later display
             st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
-            # Update last question to avoid reprocessing
-            st.session_state.last_question = question
-
             # Display the most recent question and answer
             st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
 
-          
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
-
-    
 #login page
 # def login_page():
 #     st.title("Login")
