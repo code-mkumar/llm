@@ -159,6 +159,8 @@ def write_content(data):
            
        
 
+import streamlit as st
+
 def guest_page():
     # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
@@ -187,12 +189,13 @@ def guest_page():
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
     # Input field for the user's question
-    question = st.text_input(
+    question = st.text_area(
         'Input your question:',
         placeholder="Type your question and press Enter",
+        key="question_input"
     )
 
-    # Process the question if entered
+    # Process the question if entered and not the same as the last question
     if question.strip() and question != st.session_state.last_question:
         try:
             # Generate SQL query using the model
@@ -224,10 +227,14 @@ def guest_page():
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
 
-          
+            # Automatically clear the input and last question after processing
+            st.session_state.question_input = ""
+            st.session_state.last_question = ""
+
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
+
 
     
 #login page
