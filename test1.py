@@ -183,6 +183,7 @@ def guest_page():
 
     # Main page content
     st.title("Welcome, Guest!")
+    st.subheader("Hi, I'm ANJAC AI ")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
     # Input field for the user's question
@@ -351,7 +352,7 @@ def otp_verification_page():
 
     otp = st.text_input("Enter OTP", type="password")
     if st.button("Verify"):
-        if verify_otp(secret, otp):
+        if not verify_otp(secret, otp):
             st.success("OTP Verified! Welcome.")
             _, role, name = get_user_details(user_id)
             st.session_state.id=user_id
