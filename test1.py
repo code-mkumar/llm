@@ -196,7 +196,7 @@ def guest_page():
         'Input your question:',
         placeholder="Type your question and press Enter",
         key="question_input",
-        on_change=process_and_clear  # Clear on change
+        # on_change=process_and_clear  # Clear on change
     )
 
     # Process the question if entered
@@ -231,6 +231,9 @@ def guest_page():
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
+
+process_and_clear()
+
 #login page
 # def login_page():
 #     st.title("Login")
