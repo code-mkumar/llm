@@ -188,7 +188,6 @@ def guest_page():
     # Input field for the user's question
     question = st.text_input(
         'Input your question:',
-        value="" if st.session_state.last_question == "" else st.session_state.last_question,
         placeholder="Type your question and press Enter",
     )
 
@@ -223,6 +222,8 @@ def guest_page():
             st.success("Your question has been processed successfully!")
             st.markdown(f"**Question:** {question}")
             st.markdown(f"**Answer:** {result_text}")
+
+            question = st.text_input()
         except Exception as e:
             # Handle errors gracefully
             st.error(f"An error occurred: {e}")
