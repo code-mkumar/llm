@@ -218,11 +218,11 @@ def guest_page():
         .send-icon {
             font-size: 20px;
             cursor: pointer;
-            padding: 5px;
+            padding: 10px;
             background-color: #000;
             border: none;
             color: white;
-            border-radius: 5px;
+            border-radius: 50px;
             transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
             }
             
