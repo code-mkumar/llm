@@ -211,22 +211,7 @@ def guest_page():
         value=st.session_state.question_input,  # Bind to session state
         on_change=process_and_clear,  # Process and clear on change
         help="Type your question here and it will be processed by ANJAC AI."
-    )
-
-    
-    # Create two columns: one for the text area and one for the button
-    col1, col2 = st.columns([4, 1])
-
-    with col1:
-    # Text area for input
-        user_input = st.text_area("Enter your text:", height=150, key="user_input")
-
-    with col2:
-    # Button next to the text area
-        if st.button("Submit"):
-            st.write(f"You entered: {user_input}")
-
-    
+    ) 
     # Custom HTML for Icon (can use Font Awesome for a 'Send' icon or similar)
     icon_html = '''
     <style>
