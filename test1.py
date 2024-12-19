@@ -18,20 +18,6 @@ model = genai.GenerativeModel('gemini-pro')
 def create_connection():
     return sqlite3.connect("university.db")
 
-st.markdown("""
-    <style>
-        body {
-            background-color: #000;  /* Light background color */
-        }
-        .css-1v3fvcr {
-            background-color: #f0f4f7;  /* Light background for content area */
-        }
-        .css-1lcbm3u {
-            background-color: #f0f4f7;  /* Light background for sidebar */
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 # Generate a new TOTP secret for a user
 def generate_secret_code(user_id):
     conn = create_connection()
