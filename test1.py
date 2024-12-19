@@ -225,7 +225,7 @@ def guest_page():
             border-radius: 5px;
         }
     </style>
-    <button class="send-icon" onclick="document.getElementById('submit-button').click()">Send</button>
+    <button class="send-icon" onclick="document.getElementById('submit-button').click()">↑</button>
     '''
     html(icon_html)  # Display icon button using custom HTML
 
