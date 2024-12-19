@@ -330,8 +330,8 @@ def login_page():
             st.error("Invalid credentials. Please try again.")
 
     # Create input fields for User ID and Password
-    user_id_input = st.text_input("User ID", key="user_id", label="Enter your User ID")
-    password_input = st.text_input("Password", type="password", key="password", label="Enter your Password")
+    st.text_input("Enter your User ID", key="user_id")  # Removed 'label' argument
+    st.text_input("Enter your Password", type="password", key="password")  # Removed 'label' argument
 
     # Create a Login button that triggers authentication
     if st.button("Login"):
@@ -340,6 +340,8 @@ def login_page():
     # Option for visiting as a guest
     if st.button("Visit as Guest"):
         st.session_state.page = "guest"
+        st.rerun()  # Trigger a rerun to load the guest page directly
+
 
 
 #qr scanning page
