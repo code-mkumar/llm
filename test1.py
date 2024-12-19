@@ -296,6 +296,16 @@ def guest_page():
 def login_page():
     st.title("Login")
 
+    # Initialize session state variables if they don't exist
+    if "authenticated" not in st.session_state:
+        st.session_state.authenticated = False
+    if "user_id" not in st.session_state:
+        st.session_state.user_id = ""
+    if "password" not in st.session_state:
+        st.session_state.password = ""
+    if "page" not in st.session_state:
+        st.session_state.page = "login"  # Default page
+
     # Define function to handle authentication
     def authenticate():
         user_id = st.session_state.user_id
@@ -330,8 +340,8 @@ def login_page():
             st.error("Invalid credentials. Please try again.")
 
     # Create input fields for User ID and Password
-    st.text_input("Enter your User ID", key="user_id")  # Removed 'label' argument
-    st.text_input("Enter your Password", type="password", key="password")  # Removed 'label' argument
+    user_id_input = st.text_input("Enter your User ID", key="user_id")  
+    password_input = st.text_input("Enter your Password", type="password", key="password")  
 
     # Create a Login button that triggers authentication
     if st.button("Login"):
@@ -341,8 +351,6 @@ def login_page():
     if st.button("Visit as Guest"):
         st.session_state.page = "guest"
         st.rerun()  # Trigger a rerun to load the guest page directly
-
-
 
 #qr scanning page
 def qr_setup_page():
