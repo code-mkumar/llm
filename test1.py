@@ -2,6 +2,7 @@ import streamlit as st
 import sqlite3
 import pyotp
 import qrcode
+import time  
 from io import BytesIO
 from datetime import datetime
 import os
@@ -103,99 +104,6 @@ def write_content(data):
     with open(file_path, 'a') as file:
         file.write(f'{current_datetime} - {data}\n')
 
-# Pages
-# def guest_page():
-#     def initialize_session_state():
-#         if 'qa_list' not in st.session_state:
-#             st.session_state.qa_list = []
-#         if 'last_question' not in st.session_state:
-#             st.session_state.last_question = ""
-#         if 'question_input' not in st.session_state:
-#             st.session_state.question_input = ""
-#    # Page header
-#     st.title("Welcome, Guest!")
-#     st.subheader("Hi, I'm ANJAC AI")
-#     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
-
-#      # Input field for questions
-#     st.text_area(
-#         'Ask your question:',
-#         placeholder="Type your question here...",
-#         key="question_input",
-#     )
-
-#     # Submit button for question processing
-#     if st.button("Submit Question"):
-#         process_question()
-
-#     # Sidebar for chat history and navigation
-#     with st.sidebar:
-#         st.button("Go to Login", on_click=lambda: st.session_state.update({'page': 'login'}))
-#         st.title("Chat History")
-        
-#         if st.session_state.qa_list:
-#             with st.expander("View Previous Chats"):
-#                 for qa in reversed(st.session_state.qa_list):  # Most recent first
-#                     st.markdown(f"**Question:** {qa['question']}")
-#                     st.markdown(f"**Answer:** {qa['answer']}")
-#                     st.markdown("---")
-#         else:
-#             st.info("No previous chats yet.")
-        
-#         # Option to clear chat history
-#         if st.button("Clear Chat History"):
-#             st.session_state.qa_list = []
-#             st.info("Chat history cleared.")
-
-#     # Process user input and generate an answer
-# def process_question():
-#     try:
-#         question = st.session_state.question_input.strip()
-#         if not question:
-#             st.warning("Please enter a valid question.")
-#             return
-        
-#         if question == st.session_state.last_question:
-#             st.warning("You've already asked this question.")
-#             return
-
-#         # Read default files
-#         default, default_sql = read_default_files()
-
-#         # Simulate AI model processing
-#         response = model.generate_content(f"{default_sql}\n\n{question}")
-#         raw_query = response.text
-
-#         # Clean and format the SQL query
-#         formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-#         single_line_query = " ".join(formatted_query.split()).replace("```", "")
-
-#         # Execute the query
-#         data = read_sql_query(single_line_query)
-
-#         # Generate answer based on query result
-#         answer = model.generate_content(
-#             f"{default} Answer this question: {question} with results {str(data)}"
-#         )
-#         result_text = answer.candidates[0].content.parts[0].text
-
-#         # Save Q&A to session state
-#         st.session_state.qa_list.append({'question': question, 'answer': result_text})
-
-#         # Display results
-#         st.success("Your question has been processed successfully!")
-#         st.markdown(f"**Question:** {question}")
-#         st.markdown(f"**Answer:** {result_text}")
-
-#         # Update the last question to prevent reprocessing
-#         st.session_state.last_question = question
-#         st.session_state.question_input = ""  # Clear input field
-
-#     except Exception as e:
-#         logging.error("Error processing question", exc_info=True)
-#         st.error(f"An error occurred: {e}")
-
-   
 
 def guest_page():
     # Initialize session state for storing Q&A history
@@ -215,49 +123,52 @@ def guest_page():
 
     # Function to process and clear text input after processing
     def process_and_clear():
-        # Process the question if it's valid
-        if st.session_state.question_input.strip() and st.session_state.question_input != st.session_state.last_question:
-            try:
-                question = st.session_state.question_input
-                # Simulate model processing and generate a response
-                default, default_sql = read_default_files()  # Placeholder function for reading default files
-                response = model.generate_content(f"{default_sql}\n\n{question}")
-                raw_query = response.text
+        # Display a loading spinner while processing
+        with st.spinner("Processing your question..."):
+            time.sleep(2)  # Simulate processing delay
+            # Process the question if it's valid
+            if st.session_state.question_input.strip() and st.session_state.question_input != st.session_state.last_question:
+                try:
+                    question = st.session_state.question_input
+                    # Simulate model processing and generate a response
+                    default, default_sql = read_default_files()  # Placeholder function for reading default files
+                    response = model.generate_content(f"{default_sql}\n\n{question}")
+                    raw_query = response.text
 
-                # Format the SQL query for execution (example)
-                formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-                single_line_query = " ".join(formatted_query.split()).replace("```", "")
+                    # Format the SQL query for execution (example)
+                    formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+                    single_line_query = " ".join(formatted_query.split()).replace("```", "")
 
-                # Execute the formatted query (simulate)
-                data = read_sql_query(single_line_query)  # Placeholder function for reading SQL query
+                    # Execute the formatted query (simulate)
+                    data = read_sql_query(single_line_query)  # Placeholder function for reading SQL query
 
-                # Generate an answer based on the data and user question
-                answer = model.generate_content(
-                    f"{default} Answer this question: {question} with results {str(data)}"
-                )
-                result_text = answer.candidates[0].content.parts[0].text
+                    # Generate an answer based on the data and user question
+                    answer = model.generate_content(
+                        f"{default} Answer this question: {question} with results {str(data)}"
+                    )
+                    result_text = answer.candidates[0].content.parts[0].text
 
-                # Append the Q&A to session state for later display
-                st.session_state.qa_list.append({'question': question, 'answer': result_text})
+                    # Append the Q&A to session state for later display
+                    st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
-                # Display the most recent question and answer below the main content
-                st.success("Your question has been processed successfully!")
-                st.markdown(f"**Question:** {question}")
-                st.markdown(f"**Answer:** {result_text}")
+                    # Display the most recent question and answer below the main content
+                    st.success("Your question has been processed successfully!")
+                    st.markdown(f"**Question:** {question}")
+                    st.markdown(f"**Answer:** {result_text}")
 
-                # Update last_question to avoid reprocessing the same question
-                st.session_state.last_question = question
+                    # Update last_question to avoid reprocessing the same question
+                    st.session_state.last_question = question
 
-                # Clear the input field after processing
-                st.session_state.question_input = ""  # Clear the input field
+                    # Clear the input field after processing
+                    st.session_state.question_input = ""  # Clear the input field
 
-            except Exception as e:
-                # Handle errors gracefully
-                st.error(f"An error occurred: {e}")
+                except Exception as e:
+                    # Handle errors gracefully
+                    st.error(f"An error occurred: {e}")
 
     # Sidebar to display previous questions and answers (optional)
     with st.sidebar:
-        if st.button("Go to Login"):
+        if st.button("Go to Login", help="Click to login for full access"):
             st.session_state.page = "login"
 
         st.title("Chat History")
@@ -275,8 +186,115 @@ def guest_page():
         placeholder="Type your question and press Enter",
         key="question_input",
         value=st.session_state.question_input,  # Bind to session state
-        on_change=process_and_clear  # Process and clear on change
+        on_change=process_and_clear,  # Process and clear on change
+        help="Type your question here and it will be processed by ANJAC AI."
     )
+
+    # Custom CSS Styling
+    st.markdown("""
+        <style>
+            .css-18e3th9 {
+                padding: 1rem;
+                background-color: #f7f7f7;
+                border-radius: 10px;
+            }
+            .css-1d391kg {
+                font-size: 18px;
+                color: #2d3748;
+            }
+            .css-1q7s4c7 {
+                font-size: 22px;
+                font-weight: bold;
+                color: #38a169;
+            }
+            .css-1h69q0h {
+                font-size: 14px;
+                color: #7a7a7a;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+
+# def guest_page():
+#     # Initialize session state for storing Q&A history
+#     if 'qa_list' not in st.session_state:
+#         st.session_state.qa_list = []
+
+#     if 'last_question' not in st.session_state:
+#         st.session_state.last_question = ""  # Track the last processed question
+
+#     if 'question_input' not in st.session_state:
+#         st.session_state.question_input = ""  # Initialize the question input
+
+#     # Main page content - Top of the page
+#     st.title("Welcome, Guest!")
+#     st.subheader("Hi, I'm ANJAC AI ")
+#     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
+
+#     # Function to process and clear text input after processing
+#     def process_and_clear():
+#         # Process the question if it's valid
+#         if st.session_state.question_input.strip() and st.session_state.question_input != st.session_state.last_question:
+#             try:
+#                 question = st.session_state.question_input
+#                 # Simulate model processing and generate a response
+#                 default, default_sql = read_default_files()  # Placeholder function for reading default files
+#                 response = model.generate_content(f"{default_sql}\n\n{question}")
+#                 raw_query = response.text
+
+#                 # Format the SQL query for execution (example)
+#                 formatted_query = raw_query.replace("sql", "").strip("'''").strip()
+#                 single_line_query = " ".join(formatted_query.split()).replace("```", "")
+
+#                 # Execute the formatted query (simulate)
+#                 data = read_sql_query(single_line_query)  # Placeholder function for reading SQL query
+
+#                 # Generate an answer based on the data and user question
+#                 answer = model.generate_content(
+#                     f"{default} Answer this question: {question} with results {str(data)}"
+#                 )
+#                 result_text = answer.candidates[0].content.parts[0].text
+
+#                 # Append the Q&A to session state for later display
+#                 st.session_state.qa_list.append({'question': question, 'answer': result_text})
+
+#                 # Display the most recent question and answer below the main content
+#                 st.success("Your question has been processed successfully!")
+#                 st.markdown(f"**Question:** {question}")
+#                 st.markdown(f"**Answer:** {result_text}")
+
+#                 # Update last_question to avoid reprocessing the same question
+#                 st.session_state.last_question = question
+
+#                 # Clear the input field after processing
+#                 st.session_state.question_input = ""  # Clear the input field
+
+#             except Exception as e:
+#                 # Handle errors gracefully
+#                 st.error(f"An error occurred: {e}")
+
+#     # Sidebar to display previous questions and answers (optional)
+#     with st.sidebar:
+#         if st.button("Go to Login"):
+#             st.session_state.page = "login"
+
+#         st.title("Chat History")
+#         if st.session_state.qa_list:
+#             for qa in reversed(st.session_state.qa_list):  # Most recent first
+#                 st.markdown(f"**Question:** {qa['question']}")
+#                 st.markdown(f"**Answer:** {qa['answer']}")
+#                 st.markdown("---")
+#         else:
+#             st.info("No previous chats yet.")
+
+#     # Input field for the user's question - Fixed at the bottom of the page
+#     st.text_area(
+#         'Input your question:',
+#         placeholder="Type your question and press Enter",
+#         key="question_input",
+#         value=st.session_state.question_input,  # Bind to session state
+#         on_change=process_and_clear  # Process and clear on change
+#     )
 #login page
 # def login_page():
 #     st.title("Login")
