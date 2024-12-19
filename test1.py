@@ -222,7 +222,7 @@ def guest_page():
             background-color: #000;
             border: none;
             color: white;
-            border-radius: 50px;
+            border-radius: 100px;
             transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
             }
             
