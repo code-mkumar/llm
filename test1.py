@@ -296,36 +296,48 @@ def guest_page():
 def login_page():
     st.title("Login")
 
-    # Input fields with on_change callback
+    # Define function to handle authentication
     def authenticate():
         user_id = st.session_state.user_id
         password = st.session_state.password
 
+        # Establish connection to the database
         conn = create_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM user_detail WHERE id = ? AND password = ?", (user_id, password))
         user = cursor.fetchone()
         conn.close()
 
+        # Check if credentials are correct
         if user:
+            # Successful login, set session state variables
             st.session_state.authenticated = True
             st.session_state.user_id = user_id
-            st.session_state.multifactor = user[7]  # Multifactor column
-            st.session_state.secret = user[9]  # Secret code column
+            st.session_state.multifactor = user[7]  # Assuming MFA column is at index 7
+            st.session_state.secret = user[9]  # Assuming secret column is at index 9
+
             st.success("Login successful!")
+            
+            # Handle MFA flow
             if st.session_state.multifactor == 1:
-                st.session_state.page = "otp_verification"  # Direct to OTP verification if MFA is enabled
+                st.session_state.page = "otp_verification"  # Go to OTP verification if MFA is enabled
             else:
                 if st.session_state.secret == "None":
-                    st.session_state.page = "qr_setup"  # If MFA is not enabled, show QR setup
+                    st.session_state.page = "qr_setup"  # Go to QR setup if MFA is not enabled
                 else:
-                    st.session_state.page = "otp_verification"  # Otherwise show OTP verification
+                    st.session_state.page = "otp_verification"  # Go to OTP verification if secret exists
         else:
-            st.error("Invalid credentials.")
+            st.error("Invalid credentials. Please try again.")
 
-    st.text_input("User ID", key="user_id", on_change=authenticate)
-    st.text_input("Password", type="password", key="password", on_change=authenticate)
+    # Create input fields for User ID and Password
+    user_id_input = st.text_input("User ID", key="user_id", label="Enter your User ID")
+    password_input = st.text_input("Password", type="password", key="password", label="Enter your Password")
 
+    # Create a Login button that triggers authentication
+    if st.button("Login"):
+        authenticate()
+
+    # Option for visiting as a guest
     if st.button("Visit as Guest"):
         st.session_state.page = "guest"
 
