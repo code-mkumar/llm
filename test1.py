@@ -218,12 +218,18 @@ def guest_page():
         .send-icon {
             font-size: 20px;
             cursor: pointer;
-            padding: 10px;
+            padding: 5px;
             background-color: #000;
             border: none;
             color: white;
             border-radius: 5px;
-        }
+            transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+            }
+            
+        .send-icon:hover {
+            background-color: #555; /* Change background color on hover */
+            transform: scale(1.1); /* Slightly enlarge the button on hover */
+            }
     </style>
     <button class="send-icon" onclick="document.getElementById('submit-button').click()">↑</button>
     '''
