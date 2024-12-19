@@ -173,6 +173,7 @@ def guest_page():
     with st.sidebar:
         if st.button("Go to Login", help="Click to login for full access"):
             st.session_state.page = "login"
+            st.experimental_rerun()
 
         st.title("Chat History")
         if st.session_state.qa_list:
