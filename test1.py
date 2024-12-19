@@ -171,6 +171,25 @@ def guest_page():
 
     # Sidebar to display previous questions and answers (optional)
     with st.sidebar:
+        st.markdown("""
+        <style>
+            .login-btn {
+                padding: 10px 20px;
+                background-color: #4CAF50;
+                color: white;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                transition: background-color 0.3s ease;
+            }
+            .login-btn:hover {
+                background-color: #45a049;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+
         if st.button("Go to Login", help="Click to login for full access"):
             st.session_state.page = "login"
             st.rerun()
