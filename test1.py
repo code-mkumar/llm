@@ -217,6 +217,7 @@ def guest_page():
     <style>
         .send-icon {
             font-size: 20px;
+            float:right;
             cursor: pointer;
             padding: 10px;
             background-color: #000;
