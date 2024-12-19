@@ -104,7 +104,6 @@ def write_content(data):
     with open(file_path, 'a') as file:
         file.write(f'{current_datetime} - {data}\n')
 
-
 def guest_page():
     # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
@@ -123,11 +122,10 @@ def guest_page():
 
     # Function to process and clear text input after processing
     def process_and_clear():
-        # Display a loading spinner while processing
-        with st.spinner("Processing your question..."):
-            time.sleep(2)  # Simulate processing delay
-            # Process the question if it's valid
-            if st.session_state.question_input.strip() and st.session_state.question_input != st.session_state.last_question:
+        # Process the question if it's valid
+        if st.session_state.question_input.strip() and st.session_state.question_input != st.session_state.last_question:
+            with st.spinner("Processing your question..."):
+                time.sleep(2)  # Simulate processing delay
                 try:
                     question = st.session_state.question_input
                     # Simulate model processing and generate a response
@@ -151,11 +149,6 @@ def guest_page():
                     # Append the Q&A to session state for later display
                     st.session_state.qa_list.append({'question': question, 'answer': result_text})
 
-                    # Display the most recent question and answer within the main content
-                    st.success("Your question has been processed successfully!")
-                    st.markdown(f"**Question:** {question}")
-                    st.markdown(f"**Answer:** {result_text}")
-
                     # Update last_question to avoid reprocessing the same question
                     st.session_state.last_question = question
 
@@ -165,6 +158,14 @@ def guest_page():
                 except Exception as e:
                     # Handle errors gracefully
                     st.error(f"An error occurred: {e}")
+
+    # Display the most recent Q&A if it's available
+    if st.session_state.qa_list:
+        most_recent_qa = st.session_state.qa_list[-1]
+        st.markdown("### Most Recent Q&A")
+        st.markdown(f"**Question:** {most_recent_qa['question']}")
+        st.markdown(f"**Answer:** {most_recent_qa['answer']}")
+        st.markdown("---")
 
     # Sidebar to display previous questions and answers (optional)
     with st.sidebar:
