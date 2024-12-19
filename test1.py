@@ -121,6 +121,14 @@ def guest_page():
     st.subheader("Hi, I'm ANJAC AI ")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
+    # Display the most recent question and answer (if available)
+    if st.session_state.qa_list:
+        most_recent_qa = st.session_state.qa_list[-1]
+        st.markdown("### Most Recent Q&A")
+        st.markdown(f"**Question:** {most_recent_qa['question']}")
+        st.markdown(f"**Answer:** {most_recent_qa['answer']}")
+        st.markdown("---")
+
     # Function to process and clear text input after processing
     def process_and_clear():
         # Display a loading spinner while processing
@@ -213,7 +221,6 @@ def guest_page():
             }
         </style>
     """, unsafe_allow_html=True)
-
 
 # def guest_page():
 #     # Initialize session state for storing Q&A history
