@@ -117,6 +117,17 @@ def guest_page():
     st.subheader("Hi, I'm ANJAC AI")
     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
 
+     # Input field for questions
+    st.text_area(
+        'Ask your question:',
+        placeholder="Type your question here...",
+        key="question_input",
+    )
+
+    # Submit button for question processing
+    if st.button("Submit Question"):
+        process_question()
+
     # Sidebar for chat history and navigation
     with st.sidebar:
         st.button("Go to Login", on_click=lambda: st.session_state.update({'page': 'login'}))
@@ -184,16 +195,7 @@ def process_question():
         logging.error("Error processing question", exc_info=True)
         st.error(f"An error occurred: {e}")
 
-    # Input field for questions
-    st.text_area(
-        'Ask your question:',
-        placeholder="Type your question here...",
-        key="question_input",
-    )
-
-    # Submit button for question processing
-    if st.button("Submit Question"):
-        process_question()
+   
 
 # def guest_page():
 #     # Initialize session state for storing Q&A history
