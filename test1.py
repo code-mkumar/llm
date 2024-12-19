@@ -21,7 +21,7 @@ def create_connection():
 st.markdown("""
     <style>
         body {
-            background-color: #f0f4f7;  /* Light background color */
+            background-color: #000;  /* Light background color */
         }
         .css-1v3fvcr {
             background-color: #f0f4f7;  /* Light background for content area */
