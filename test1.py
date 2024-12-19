@@ -228,6 +228,11 @@ def guest_page():
     if 'question_input' not in st.session_state:
         st.session_state.question_input = ""  # Initialize the question input
 
+    # Main page content - Top of the page
+    st.title("Welcome, Guest!")
+    st.subheader("Hi, I'm ANJAC AI ")
+    st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
+
     # Function to process and clear text input after processing
     def process_and_clear():
         # Process the question if it's valid
@@ -289,7 +294,18 @@ def guest_page():
         else:
             st.info("No previous chats yet.")
 
-    # Custom HTML for Icon Button (like FontAwesome or any other icon)
+    # Input field for the user's question - Fixed at the bottom of the page
+    question_input = st.text_area(
+        'Input your question:',
+        placeholder="Type your question and press Enter",
+        key="question_input",
+        value=st.session_state.question_input,  # Bind to session state
+        on_change=process_and_clear,  # Process and clear on change
+        help="Type your question here and it will be processed by ANJAC AI."
+    )
+
+    
+    # Custom HTML for Icon (can use Font Awesome for a 'Send' icon or similar)
     icon_html = '''
     <style>
         .send-icon {
@@ -306,23 +322,6 @@ def guest_page():
     '''
     html(icon_html)  # Display icon button using custom HTML
 
-    # Input field for the user's question - Fixed at the bottom of the page
-    col1, col2 = st.columns([6, 1])  # Two columns: one for text input, one for the icon button
-
-    with col1:
-        question_input = st.text_area(
-            'Input your question:',
-            placeholder="Type your question and press Enter",
-            key="question_input",
-            value=st.session_state.question_input,  # Bind to session state
-            on_change=process_and_clear,  # Process and clear on change
-            help="Type your question here and it will be processed by ANJAC AI."
-        )
-    
-    with col2:
-        # Button to trigger the input processing
-        if st.button('Send', key="submit-button", help="Click to process the question"):
-            process_and_clear()
 
     # Custom CSS Styling
     st.markdown("""
