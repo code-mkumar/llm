@@ -164,7 +164,7 @@ def guest_page():
     # Display the most recent Q&A if it's available
     if st.session_state.qa_list:
         most_recent_qa = st.session_state.qa_list[-1]
-        st.markdown("### Most Recent Q&A")
+        st.markdown("### Question & Answer Q&A")
         st.markdown(f"**Question:** {most_recent_qa['question']}")
         st.markdown(f"**Answer:** {most_recent_qa['answer']}")
         st.markdown("---")
