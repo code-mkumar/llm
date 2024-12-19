@@ -219,7 +219,7 @@ def guest_page():
             font-size: 20px;
             cursor: pointer;
             padding: 10px;
-            background-color: #38a169;
+            background-color: #000;
             border: none;
             color: white;
             border-radius: 5px;
