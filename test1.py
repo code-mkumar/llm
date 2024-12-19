@@ -106,160 +106,6 @@ def write_content(data):
         file.write(f'{current_datetime} - {data}\n')
 
 
-# def guest_page():
-#     # Initialize session state for storing Q&A history
-#     if 'qa_list' not in st.session_state:
-#         st.session_state.qa_list = []
-
-#     if 'last_question' not in st.session_state:
-#         st.session_state.last_question = ""  # Track the last processed question
-
-#     if 'question_input' not in st.session_state:
-#         st.session_state.question_input = ""  # Initialize the question input
-
-#     # Main page content - Top of the page
-#     st.title("Welcome, Guest!")
-#     st.subheader("Hi, I'm ANJAC AI ")
-#     st.write("You can explore the site as a guest, but you'll need to log in for full role-based access.")
-
-#     # Function to process and clear text input after processing
-#     def process_and_clear():
-#         # Process the question if it's valid
-#         if st.session_state.question_input.strip() and st.session_state.question_input != st.session_state.last_question:
-#             with st.spinner("Processing your question..."):
-#                 time.sleep(2)  # Simulate processing delay
-#                 try:
-#                     question = st.session_state.question_input
-#                     # Simulate model processing and generate a response
-#                     default, default_sql = read_default_files()  # Placeholder function for reading default files
-#                     response = model.generate_content(f"{default_sql}\n\n{question}")
-#                     raw_query = response.text
-
-#                     # Format the SQL query for execution (example)
-#                     formatted_query = raw_query.replace("sql", "").strip("'''").strip()
-#                     single_line_query = " ".join(formatted_query.split()).replace("```", "")
-
-#                     # Execute the formatted query (simulate)
-#                     data = read_sql_query(single_line_query)  # Placeholder function for reading SQL query
-
-#                     # Generate an answer based on the data and user question
-#                     answer = model.generate_content(
-#                         f"{default} Answer this question: {question} with results {str(data)}"
-#                     )
-#                     result_text = answer.candidates[0].content.parts[0].text
-
-#                     # Append the Q&A to session state for later display
-#                     st.session_state.qa_list.append({'question': question, 'answer': result_text})
-
-#                     # Update last_question to avoid reprocessing the same question
-#                     st.session_state.last_question = question
-
-#                     # Clear the input field after processing
-#                     st.session_state.question_input = ""  # Clear the input field
-
-#                 except Exception as e:
-#                     # Handle errors gracefully
-#                     st.error(f"An error occurred: {e}")
-
-#     # Display the most recent Q&A if it's available
-#     if st.session_state.qa_list:
-#         most_recent_qa = st.session_state.qa_list[-1]
-#         st.markdown("### Question & Answer Q&A")
-#         st.markdown(f"**Question:** {most_recent_qa['question']}")
-#         st.markdown(f"**Answer:** {most_recent_qa['answer']}")
-#         st.markdown("---")
-
-#     # Sidebar to display previous questions and answers (optional)
-#     with st.sidebar:
-#         st.markdown("""
-#         <style>
-#             .login-btn {
-#                 padding: 10px 20px;
-#                 background-color: #4CAF50;
-#                 color: white;
-#                 font-size: 16px;
-#                 border: none;
-#                 border-radius: 5px;
-#                 cursor: pointer;
-#                 box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-#                 transition: background-color 0.3s ease;
-#             }
-#             .login-btn:hover {
-#                 background-color: #45a049;
-#             }
-#         </style>
-#         """, unsafe_allow_html=True)
-
-#         if st.button("Go to Login", help="Click to login for full access"):
-#             st.session_state.page = "login"
-#             st.rerun()
-
-#         st.title("Chat History")
-#         if st.session_state.qa_list:
-#             for qa in reversed(st.session_state.qa_list):  # Most recent first
-#                 st.markdown(f"**Question:** {qa['question']}")
-#                 st.markdown(f"**Answer:** {qa['answer']}")
-#                 st.markdown("---")
-#         else:
-#             st.info("No previous chats yet.")
-
-#     # Input field for the user's question - Fixed at the bottom of the page
-#     question_input = st.text_area(
-#         'Input your question:',
-#         placeholder="Type your question and press Enter",
-#         key="question_input",
-#         value=st.session_state.question_input,  # Bind to session state
-#         on_change=process_and_clear,  # Process and clear on change
-#         help="Type your question here and it will be processed by ANJAC AI."
-#     ) 
-#     # Custom HTML for Icon (can use Font Awesome for a 'Send' icon or similar)
-#     icon_html = '''
-#     <style>
-#         .send-icon {
-#             font-size: 20px;
-#             cursor: pointer;
-#             padding: 5px;
-#             background-color: #000;
-#             border: none;
-#             color: white;
-#             border-radius: 5px;
-#             transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
-#             }
-            
-#         .send-icon:hover {
-#             background-color: #555; /* Change background color on hover */
-#             transform: scale(1.1); /* Slightly enlarge the button on hover */
-#             }
-#     </style>
-#     <button class="send-icon" onclick="document.getElementById('submit-button').click()">↑</button>
-#     '''
-#     html(icon_html)  # Display icon button using custom HTML
-
-
-#     # Custom CSS Styling
-#     st.markdown("""
-#         <style>
-#             .css-18e3th9 {
-#                 padding: 1rem;
-#                 background-color: #f7f7f7;
-#                 border-radius: 10px;
-#             }
-#             .css-1d391kg {
-#                 font-size: 18px;
-#                 color: #2d3748;
-#             }
-#             .css-1q7s4c7 {
-#                 font-size: 22px;
-#                 font-weight: bold;
-#                 color: #38a169;
-#             }
-#             .css-1h69q0h {
-#                 font-size: 14px;
-#                 color: #7a7a7a;
-#             }
-#         </style>
-#     """, unsafe_allow_html=True)
-
 def guest_page():
     # Initialize session state for storing Q&A history
     if 'qa_list' not in st.session_state:
@@ -357,48 +203,7 @@ def guest_page():
         else:
             st.info("No previous chats yet.")
 
-    # Custom HTML and CSS for Text Box with Send Icon
-    st.markdown("""
-    <style>
-        .input-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .text-area {
-            width: 80%;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-right: 10px;
-        }
-        .send-icon {
-            font-size: 20px;
-            cursor: pointer;
-            padding: 10px;
-            background-color: #000;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .send-icon:hover {
-            background-color: #555;
-            transform: scale(1.1);
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # HTML structure for the input area and button
-    st.markdown("""
-    <div class="input-container">
-        <textarea class="text-area" id="question_input" placeholder="Type your question here..."></textarea>
-        <button class="send-icon" onclick="document.getElementById('question_input').value = ''; document.getElementById('submit-button').click();">↑</button>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # Handle the text area input and process the question
+    # Input field for the user's question - Fixed at the bottom of the page
     question_input = st.text_area(
         'Input your question:',
         placeholder="Type your question and press Enter",
@@ -406,8 +211,54 @@ def guest_page():
         value=st.session_state.question_input,  # Bind to session state
         on_change=process_and_clear,  # Process and clear on change
         help="Type your question here and it will be processed by ANJAC AI."
-    )
+    ) 
+    # Custom HTML for Icon (can use Font Awesome for a 'Send' icon or similar)
+    icon_html = '''
+    <style>
+        .send-icon {
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            background-color: #000;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+            }
+            
+        .send-icon:hover {
+            background-color: #555; /* Change background color on hover */
+            transform: scale(1.1); /* Slightly enlarge the button on hover */
+            }
+    </style>
+    <button class="send-icon" onclick="document.getElementById('submit-button').click()">↑</button>
+    '''
+    html(icon_html)  # Display icon button using custom HTML
 
+
+    # Custom CSS Styling
+    st.markdown("""
+        <style>
+            .css-18e3th9 {
+                padding: 1rem;
+                background-color: #f7f7f7;
+                border-radius: 10px;
+            }
+            .css-1d391kg {
+                font-size: 18px;
+                color: #2d3748;
+            }
+            .css-1q7s4c7 {
+                font-size: 22px;
+                font-weight: bold;
+                color: #38a169;
+            }
+            .css-1h69q0h {
+                font-size: 14px;
+                color: #7a7a7a;
+            }
+        </style>
+    """, unsafe_allow_html=True)
 
 #login page
 # def login_page():
