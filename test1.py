@@ -3,6 +3,7 @@ import sqlite3
 import pyotp
 import qrcode
 import time  
+from streamlit.components.v1 import html 
 from io import BytesIO
 from datetime import datetime
 import os
@@ -216,9 +217,7 @@ def write_content(data):
 #     """, unsafe_allow_html=True)
 
 
-import streamlit as st
-import time  # For simulating processing delay
-from streamlit.components.v1 import html  # For rendering custom HTML
+
 
 def guest_page():
     # Initialize session state for storing Q&A history
@@ -297,6 +296,17 @@ def guest_page():
         else:
             st.info("No previous chats yet.")
 
+
+    # Input field for the user's question - Fixed at the bottom of the page
+    question_input = st.text_area(
+        'Input your question:',
+        placeholder="Type your question and press Enter",
+        key="question_input",
+        value=st.session_state.question_input,  # Bind to session state
+        on_change=process_and_clear,  # Process and clear on change
+        help="Type your question here and it will be processed by ANJAC AI."
+    )
+    
     # Custom HTML for Icon (can use Font Awesome for a 'Send' icon or similar)
     icon_html = '''
     <style>
@@ -313,16 +323,6 @@ def guest_page():
     <button class="send-icon" onclick="document.getElementById('submit-button').click()">Send</button>
     '''
     html(icon_html)  # Display icon button using custom HTML
-
-    # Input field for the user's question - Fixed at the bottom of the page
-    question_input = st.text_area(
-        'Input your question:',
-        placeholder="Type your question and press Enter",
-        key="question_input",
-        value=st.session_state.question_input,  # Bind to session state
-        on_change=process_and_clear,  # Process and clear on change
-        help="Type your question here and it will be processed by ANJAC AI."
-    )
 
     # Custom CSS Styling
     st.markdown("""
