@@ -213,7 +213,7 @@ def guest_page():
         help="Type your question here and it will be processed by ANJAC AI."
     ) 
 
-     with st.container():
+    with st.container():
         st.markdown("""
         <div style="background-color:#f1f1f1; padding: 20px; border-radius: 10px;">
             <h4>Ask a Question</h4>
