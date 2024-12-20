@@ -212,6 +212,22 @@ def guest_page():
         on_change=process_and_clear,  # Process and clear on change
         help="Type your question here and it will be processed by ANJAC AI."
     ) 
+
+     with st.container():
+        st.markdown("""
+        <div style="background-color:#f1f1f1; padding: 20px; border-radius: 10px;">
+            <h4>Ask a Question</h4>
+            <div>
+                <textarea
+                    id="question_input"
+                    placeholder="Type your question and press Enter"
+                    style="width: 100%; padding: 10px; font-size: 14px; height: 80px; border-radius: 5px;"
+                >{}</textarea>
+                <br><br>
+                <button class="send-icon" onclick="document.getElementById('submit-button').click()">↑</button>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     # Custom HTML for Icon (can use Font Awesome for a 'Send' icon or similar)
     icon_html = '''
     <style>
